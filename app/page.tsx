@@ -1,5 +1,3 @@
-import BlankPage from "@/src/components/BlankPage";
-
 export default function Home() {
-  return <BlankPage title="Inicio" />;
+  return null;
 }
