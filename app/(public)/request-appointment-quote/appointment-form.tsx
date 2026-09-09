@@ -3,7 +3,7 @@
 import { useActionState, useState, useTransition } from "react";
 import {
   processAppointmentForm,
-  getAppointmentsForDate,
+  getAvailableSlotsForDate,
   type AppointmentActionState,
 } from "./actions";
 import { DatePickerField } from "./date-picker-field";
@@ -45,24 +45,28 @@ export function AppointmentForm({ services }: { services: Service[] }) {
   );
 
   const [selectedDate, setSelectedDate] = useState<Date>();
-  const [appointmentsForDate, setAppointmentsForDate] = useState<
-    Awaited<ReturnType<typeof getAppointmentsForDate>>
+  const [availableSlots, setAvailableSlots] = useState<
+    Awaited<ReturnType<typeof getAvailableSlotsForDate>>
   >([]);
+  const [selectedSlot, setSelectedSlot] = useState("");
+  const [selectedSlotEnd, setSelectedSlotEnd] = useState("");
   const [isPending, startTransition] = useTransition();
 
   function handleDateChange(selectedDate: Date | undefined) {
     setSelectedDate(selectedDate);
+    setSelectedSlot("");
+    setSelectedSlotEnd("");
     if (!selectedDate) {
-      setAppointmentsForDate([]);
+      setAvailableSlots([]);
       return;
     }
 
     startTransition(async () => {
       const formatedDate = format(selectedDate, "yyyy-MM-dd");
 
-      const appointments = await getAppointmentsForDate(formatedDate);
+      const slots = await getAvailableSlotsForDate(formatedDate);
 
-      setAppointmentsForDate(appointments);
+      setAvailableSlots(slots);
     });
   }
 
@@ -150,11 +154,44 @@ export function AppointmentForm({ services }: { services: Service[] }) {
       <DatePickerField onDateChange={handleDateChange} />
       {isPending && <p>Consultando disponibilidad...</p>}
 
-      {!isPending &&
-        appointmentsForDate.length > 0 &&
-        appointmentsForDate.map((appointment) => (
-          <p key={appointment.id}>{appointment.id}</p>
-        ))}
+      {!isPending && selectedDate && availableSlots.length === 0 && (
+        <p>No hay horas disponibles para este día.</p>
+      )}
+
+      {!isPending && availableSlots.length > 0 && (
+        <fieldset className="w-full">
+          <legend className="mb-2 font-medium">Available times</legend>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {availableSlots.map((slot) => {
+              const isSelected = selectedSlot === slot.value;
+
+              return (
+                <button
+                  key={slot.value}
+                  type="button"
+                  onClick={() => {
+                    setSelectedSlot(slot.value);
+                    setSelectedSlotEnd(slot.endValue);
+                  }}
+                  aria-pressed={isSelected}
+                  className={`rounded-md border px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    isSelected
+                      ? "border-blue-600 bg-blue-600 text-white"
+                      : "border-gray-300 bg-white text-gray-900 hover:border-blue-500 hover:bg-blue-50"
+                  }`}
+                >
+                  {slot.label}
+                </button>
+              );
+            })}
+          </div>
+        </fieldset>
+      )}
+
+      <input type="hidden" name="appointment_start" value={selectedSlot} />
+      <FieldError errors={state.errors} field="appointment_start" />
+      <input type="hidden" name="appointment_end" value={selectedSlotEnd} />
+      <FieldError errors={state.errors} field="appointment_end" />
 
       <label htmlFor="notes">Notes</label>
       <textarea name="notes" id="notes" maxLength={1000} />
