@@ -2,6 +2,7 @@
 
 import { db } from "@/src/db";
 import { appointments, users, vehicles } from "@/src/db/schema";
+import { eq, sql } from "drizzle-orm";
 import { z } from "zod";
 
 export type AppointmentActionState = {
@@ -12,6 +13,9 @@ export type AppointmentActionState = {
 
 const appointmentSchema = z.object({
   full_name: z.string().trim().min(2, "El nombre es obligatorio").max(100),
+  email: z
+    .email("Email con formato no váido.")
+    .nonempty("Debes inroducir un email."),
   phone: z.string().trim().min(7, "El teléfono no es válido").max(30),
   service: z.uuid("El servicio no es válido"),
   license_plate: z
@@ -51,24 +55,46 @@ export async function processAppointmentForm(
   }
 
   const values = result.data;
+  const normalizedEmail = values.email.trim().toLowerCase();
+  const normalizedLicensePlate = values.license_plate.trim().toUpperCase();
 
   try {
     await db.transaction(async (tx) => {
-      const [user] = await tx
+      const [insertedUser] = await tx
         .insert(users)
-        .values({ fullName: values.full_name, phone: values.phone })
+        .values({
+          fullName: values.full_name,
+          email: normalizedEmail,
+          phone: values.phone,
+        })
+        .onConflictDoNothing()
         .returning({ id: users.id });
+      const [user] = insertedUser
+        ? [insertedUser]
+        : await tx
+            .select({ id: users.id })
+            .from(users)
+            .where(sql`lower(${users.email}) = ${normalizedEmail}`)
+            .limit(1);
 
-      const [vehicle] = await tx
+      const [insertedVehicle] = await tx
         .insert(vehicles)
         .values({
-          licensePlate: values.license_plate,
+          licensePlate: normalizedLicensePlate,
           brand: values.brand,
           model: values.model,
           year: values.year,
           vin: values.vin || undefined,
         })
+        .onConflictDoNothing({ target: vehicles.licensePlate })
         .returning({ id: vehicles.id });
+      const [vehicle] = insertedVehicle
+        ? [insertedVehicle]
+        : await tx
+            .select({ id: vehicles.id })
+            .from(vehicles)
+            .where(eq(vehicles.licensePlate, normalizedLicensePlate))
+            .limit(1);
 
       const now = new Date();
       await tx.insert(appointments).values({

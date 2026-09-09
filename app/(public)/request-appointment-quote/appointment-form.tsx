@@ -56,6 +56,16 @@ export function AppointmentForm({ services }: { services: Service[] }) {
         />
         <FieldError errors={state.errors} field="full_name" />
 
+        <label htmlFor="email">Email</label>
+        <input
+          type="email"
+          name="email"
+          id="email"
+          placeholder="Email..."
+          required
+        />
+        <FieldError errors={state.errors} field="email" />
+
         <label htmlFor="phone">Phone number</label>
         <input type="tel" name="phone" id="phone" autoComplete="tel" required />
         <FieldError errors={state.errors} field="phone" />

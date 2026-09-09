@@ -15,6 +15,20 @@
       "when": 1788895992504,
       "tag": "0001_new_cassandra_nova",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788940569215,
+      "tag": "0002_simple_the_hood",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1788941279577,
+      "tag": "0003_case_insensitive_user_emails",
+      "breakpoints": true
     }
   ]
 }

@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import {
   pgTable,
   text,
@@ -8,6 +9,7 @@ import {
   pgEnum,
   date,
   integer,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 
 export const appointment_status = pgEnum("status", [
@@ -19,11 +21,18 @@ export const appointment_status = pgEnum("status", [
 ]);
 
 //Usuarios
-export const users = pgTable("users", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  fullName: text("full_name"),
-  phone: varchar("phone", { length: 256 }),
-});
+export const users = pgTable(
+  "users",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    fullName: text("full_name"),
+    email: text("email").notNull(),
+    phone: varchar("phone", { length: 256 }),
+  },
+  (table) => [
+    uniqueIndex("users_email_lower_unique").on(sql`lower(${table.email})`),
+  ],
+);
 
 //Servicios disponibles
 export const services = pgTable("services", {
