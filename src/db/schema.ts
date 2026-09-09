@@ -7,6 +7,7 @@ import {
   uuid,
   pgEnum,
   date,
+  integer,
 } from "drizzle-orm/pg-core";
 
 export const appointment_status = pgEnum("status", [
@@ -37,7 +38,7 @@ export const vehicles = pgTable("vehicles", {
   licensePlate: text("license_plate").notNull().unique(),
   brand: text("brand").notNull(),
   model: text("model").notNull(),
-  year: date("year", { mode: "date" }).notNull(),
+  year: integer("year").notNull(),
   vin: text("vin"),
 });
 

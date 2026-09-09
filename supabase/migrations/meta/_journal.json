@@ -8,6 +8,13 @@
       "when": 1788869281271,
       "tag": "0000_bizarre_plazm",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1788895992504,
+      "tag": "0001_new_cassandra_nova",
+      "breakpoints": true
     }
   ]
 }

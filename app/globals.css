@@ -18,5 +18,13 @@
 
 html {
   background-color: var(--color-bg-dark);
-  color: var(--color-text-main);
+  color: var(--color-text-inverse);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+span, p, a {
+  font-family: var(--font-body);
 }
