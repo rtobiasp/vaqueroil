@@ -1,7 +1,13 @@
 "use client";
 
-import { useActionState } from "react";
-import { processAppointmentForm, type AppointmentActionState } from "./actions";
+import { useActionState, useState, useTransition } from "react";
+import {
+  processAppointmentForm,
+  getAppointmentsForDate,
+  type AppointmentActionState,
+} from "./actions";
+import { DatePickerField } from "./date-picker-field";
+import { format } from "date-fns";
 
 type Service = {
   id: string;
@@ -37,6 +43,28 @@ export function AppointmentForm({ services }: { services: Service[] }) {
     processAppointmentForm,
     initialState,
   );
+
+  const [selectedDate, setSelectedDate] = useState<Date>();
+  const [appointmentsForDate, setAppointmentsForDate] = useState<
+    Awaited<ReturnType<typeof getAppointmentsForDate>>
+  >([]);
+  const [isPending, startTransition] = useTransition();
+
+  function handleDateChange(selectedDate: Date | undefined) {
+    setSelectedDate(selectedDate);
+    if (!selectedDate) {
+      setAppointmentsForDate([]);
+      return;
+    }
+
+    startTransition(async () => {
+      const formatedDate = format(selectedDate, "yyyy-MM-dd");
+
+      const appointments = await getAppointmentsForDate(formatedDate);
+
+      setAppointmentsForDate(appointments);
+    });
+  }
 
   return (
     <form
@@ -118,6 +146,15 @@ export function AppointmentForm({ services }: { services: Service[] }) {
         <input type="text" name="vin" id="vin" maxLength={17} />
         <FieldError errors={state.errors} field="vin" />
       </fieldset>
+
+      <DatePickerField onDateChange={handleDateChange} />
+      {isPending && <p>Consultando disponibilidad...</p>}
+
+      {!isPending &&
+        appointmentsForDate.length > 0 &&
+        appointmentsForDate.map((appointment) => (
+          <p key={appointment.id}>{appointment.id}</p>
+        ))}
 
       <label htmlFor="notes">Notes</label>
       <textarea name="notes" id="notes" maxLength={1000} />

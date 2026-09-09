@@ -2,7 +2,7 @@
 
 import { db } from "@/src/db";
 import { appointments, users, vehicles } from "@/src/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { and, eq, gt, lt, sql } from "drizzle-orm";
 import { z } from "zod";
 
 export type AppointmentActionState = {
@@ -117,4 +117,16 @@ export async function processAppointmentForm(
       message: "No se pudo enviar la solicitud. Inténtalo de nuevo.",
     };
   }
+}
+
+export async function getAppointmentsForDate(dateValue: string) {
+  const start = new Date(`${dateValue}T00:00:00.000Z`);
+  const end = new Date(`${dateValue}T23:59:59.999Z`);
+
+  return db
+    .select()
+    .from(appointments)
+    .where(
+      and(lt(appointments.fechaInicio, end), gt(appointments.fechaFin, start)),
+    );
 }
