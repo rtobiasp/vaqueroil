@@ -145,8 +145,6 @@ export async function processAppointmentForm(
       message: "No se pudo enviar la solicitud. Inténtalo de nuevo.",
     };
   }
-
-  redirect("/request-appointment-quote?success=1");
 }
 
 export async function getAvailableSlotsForDate(dateValue: string) {
