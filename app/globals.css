@@ -8,14 +8,15 @@
 @theme {
 
   --color-accent-primary: #E85D22;
+  --color-accent-primary-hover: #C44712;
   --color-bg-dark: #141518;
   --color-surface-mid: #2A2D34;
   --color-bg-light: #F8F9FA;
   --color-text-main: #1E2024;
   --color-text-inverse: #FFFFFF;
 
-  --font-heading: 'Montserrat', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-link: "Roboto Mono", Menlo, Consolas, Monaco, "Liberation Mono", "Lucida Console", monospace;
 
 }
 
@@ -24,12 +25,8 @@ html {
   color: var(--color-text-inverse);
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-}
-
-span, p, a {
-  font-family: var(--font-body);
+a {
+  font-family: var(--font-link);
 }
 
 @theme inline {
@@ -253,15 +250,16 @@ span, p, a {
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    font-family: inherit;
 
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-body);
 
   }
   html {
-    @apply font-sans;
-
+    font-family: var(--font-body);
   }
 
 }
