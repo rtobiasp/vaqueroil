@@ -8,7 +8,7 @@ export default function PublicLayout({
   return (
     <>
       <Header />
-      <main>{children}</main>
+      {children}
       <footer>Footer público</footer>
     </>
   );

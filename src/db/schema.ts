@@ -37,7 +37,8 @@ export const users = pgTable(
 //Servicios disponibles
 export const services = pgTable("services", {
   id: uuid("id").primaryKey().defaultRandom(),
-  name: text("name"),
+  name: text("name").notNull(),
+  description: text("description"),
   price: decimal("price").notNull(),
 });
 
