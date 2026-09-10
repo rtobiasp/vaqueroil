@@ -18,7 +18,7 @@ export default function ServiceCard({
 
   return (
     <article
-      className={`flex flex-col items-center justify-between p-10 transition duration-300 text-text-inverse ${swiperSlide.isActive ? "bg-accent-primary min-h-100" : "bg-surface-mid min-h-90"}`}
+      className={`flex flex-col items-center justify-between p-10 transition duration-300 rounded-2xl text-text-inverse ${swiperSlide.isActive ? "bg-accent-primary min-h-full" : "bg-surface-mid min-h-[90%]"}`}
     >
       <div className="flex flex-col items-center gap-5">
         {icon}

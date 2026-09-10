@@ -20,13 +20,13 @@ export default function ServicesSection({ services }: ServicesSectionProps) {
   const [nextEl, setNextEl] = useState<HTMLButtonElement | null>(null);
 
   return (
-    <section className="min-h-[80vh] flex flex-col items-center gap-15 px-15 py-16">
+    <section className="min-h-[80vh] flex flex-col items-center gap-15 px-15 py-16 bg-[url(@/public/black-felt.png)]">
       <h2 className="text-text-inverse font-medium text-6xl">
         NUESTROS SERVICIOS
       </h2>
-      <div className="relative w-full px-12">
+      <div className="relative h-[60vh] w-full px-12">
         <Swiper
-          className="w-full min-w-0"
+          className="w-full h-full min-w-0"
           spaceBetween={30}
           slidesPerView={3}
           centeredSlides={true}
