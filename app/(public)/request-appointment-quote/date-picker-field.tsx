@@ -1,5 +1,4 @@
 import DatePicker from "@/components/date-picker";
-import { useState } from "react";
 
 type DatePickerFieldProps = {
   onDateChange: (date: Date | undefined) => void;

@@ -25,7 +25,7 @@ export const users = pgTable(
   "users",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    fullName: text("full_name"),
+    fullName: text("full_name").notNull(),
     email: text("email").notNull(),
     phone: varchar("phone", { length: 256 }),
   },
@@ -65,7 +65,13 @@ export const appointments = pgTable("appointments", {
   }).notNull(),
   status: appointment_status("status").default("PENDING"),
   notes: text("notes"),
-  user: uuid("user_id").references(() => users.id),
-  service: uuid("service_id").references(() => services.id),
-  vehicle: uuid("vehicle_id").references(() => vehicles.id),
+  user: uuid("user_id")
+    .references(() => users.id)
+    .notNull(),
+  service: uuid("service_id")
+    .references(() => services.id)
+    .notNull(),
+  vehicle: uuid("vehicle_id")
+    .references(() => vehicles.id)
+    .notNull(),
 });
