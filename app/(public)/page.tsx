@@ -1,6 +1,7 @@
 import HeroSection from "@/components/home/HeroSection";
 import ServicesSection from "@/components/home/ServicesSection";
 import FeatureBarSection from "@/components/home/FeatureBarSection";
+import BrandsMarqueeSection from "@/components/home/BrandsMarqueeSection";
 import { db } from "@/src/db";
 import { services } from "@/src/db/schema";
 import TestimonialSection from "@/components/home/TestimonialSection";
@@ -14,8 +15,9 @@ export default async function Home() {
     <main>
       <HeroSection />
       <FeatureBarSection />
-      <ServicesSection services={serviceList} />
       <VentajasSection />
+      <BrandsMarqueeSection />
+      <ServicesSection services={serviceList} />
       <TestimonialSection />
       <UbicacionSection />
     </main>

@@ -20,6 +20,14 @@
   
   --background-image-felt: url('/black-felt.png');
 
+  --animate-marquee: marquee 30s linear infinite;
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
 }
 
 html {
