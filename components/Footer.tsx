@@ -20,8 +20,8 @@ export default function Footer() {
 
   return (
     <footer className="bg-bg-dark bg-felt text-text-inverse">
-      <div className="mx-auto w-full max-w-7xl px-8 py-14 md:px-15 md:py-20">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_0.7fr_1.1fr] lg:gap-10">
+      <div className="mx-auto w-full max-w-7xl px-5 py-12 sm:px-8 sm:py-14 md:px-15 md:py-20">
+        <div className="grid grid-cols-1 gap-10 sm:gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_0.7fr_1.1fr] lg:gap-10">
           {/* Marca */}
           <div className="flex flex-col items-start gap-5">
             <Link href="/" aria-label="Vaqueroil - inicio">
@@ -30,18 +30,18 @@ export default function Footer() {
                 alt="Vaqueroil"
                 width={200}
                 height={64}
-                className="h-auto w-44"
+                className="h-auto w-36 sm:w-44"
               />
             </Link>
-            <p className="max-w-xs text-lg leading-relaxed text-text-inverse/70">
+            <p className="max-w-xs text-base leading-relaxed text-text-inverse/70 sm:text-lg">
               Tu vehículo, en las mejores manos. Mantenimiento y reparación
               profesional en Logroño.
             </p>
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center [&>a:first-child]:justify-center">
               <BrandButton link="/request-appointment-quote" text="Pedir cita" />
               <a
                 href="tel:+34941047695"
-                className="flex items-center gap-2 rounded-lg border border-text-inverse/25 px-4 py-3 text-sm font-medium transition hover:border-accent-primary hover:text-accent-primary"
+                className="flex items-center justify-center gap-2 rounded-lg border border-text-inverse/25 px-4 py-3 text-sm font-medium transition hover:border-accent-primary hover:text-accent-primary"
               >
                 <Phone size={16} aria-hidden="true" />
                 941 04 76 95
@@ -69,7 +69,7 @@ export default function Footer() {
           </nav>
 
           {/* Contacto */}
-          <div className="rounded-2xl bg-surface-mid p-6">
+          <div className="rounded-2xl bg-surface-mid p-5 sm:p-6">
             <h2 className="font-link text-sm uppercase tracking-widest text-accent-primary">
               Contacto
             </h2>
@@ -113,7 +113,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-text-inverse/10">
-        <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-3 px-8 py-6 text-sm text-text-inverse/50 md:flex-row md:px-15">
+        <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-3 px-5 py-6 text-center text-sm text-text-inverse/50 sm:px-8 md:flex-row md:px-15 md:text-left">
           <p>© {year} Vaqueroil · Logroño, La Rioja</p>
           <div className="flex items-center gap-5">
             <Link href="/legal" className="transition-colors hover:text-text-inverse">

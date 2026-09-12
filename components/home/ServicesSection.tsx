@@ -20,19 +20,23 @@ export default function ServicesSection({ services }: ServicesSectionProps) {
   const [nextEl, setNextEl] = useState<HTMLButtonElement | null>(null);
 
   return (
-    <section className="min-h-[80vh] flex flex-col items-center gap-15 px-15 py-16 bg-[url(@/public/black-felt.png)]">
-      <h2 className="text-text-inverse font-medium text-6xl">
+    <section className="flex min-h-[80vh] flex-col items-center gap-8 bg-[url(@/public/black-felt.png)] px-5 py-12 sm:gap-12 sm:px-8 md:gap-15 md:px-15 md:py-16">
+      <h2 className="text-center font-medium text-3xl text-text-inverse sm:text-5xl md:text-6xl">
         NUESTROS SERVICIOS
       </h2>
-      <div className="relative h-[60vh] w-full px-12">
+      <div className="relative h-[60vh] min-h-[480px] w-full sm:px-12 md:min-h-0">
         <Swiper
-          className="w-full h-full min-w-0"
-          spaceBetween={30}
-          slidesPerView={3}
+          className="h-full w-full min-w-0"
+          spaceBetween={16}
+          slidesPerView={1}
           centeredSlides={true}
           loop={true}
           modules={[Navigation]}
           navigation={{ prevEl, nextEl }}
+          breakpoints={{
+            640: { slidesPerView: 1.5, spaceBetween: 20 },
+            1024: { slidesPerView: 3, spaceBetween: 30 },
+          }}
         >
           {services.map((service, index) => (
             <SwiperSlide key={index}>
@@ -49,7 +53,7 @@ export default function ServicesSection({ services }: ServicesSectionProps) {
         <button
           ref={(node) => setPrevEl(node)}
           aria-label="Servicio anterior"
-          className="absolute left-0 top-1/2 z-10 -translate-y-1/2 rounded-full bg-surface-mid p-2 hover:cursor-pointer"
+          className="absolute top-1/2 left-0 z-10 hidden -translate-y-1/2 rounded-full bg-surface-mid p-2 hover:cursor-pointer sm:block"
         >
           <ArrowLeft className="h-6 w-6 text-text-inverse" />
         </button>
@@ -57,7 +61,7 @@ export default function ServicesSection({ services }: ServicesSectionProps) {
         <button
           ref={(node) => setNextEl(node)}
           aria-label="Siguiente servicio"
-          className="absolute right-0 top-1/2 z-10 -translate-y-1/2 rounded-full bg-surface-mid p-2 hover:cursor-pointer"
+          className="absolute top-1/2 right-0 z-10 hidden -translate-y-1/2 rounded-full bg-surface-mid p-2 hover:cursor-pointer sm:block"
         >
           <ArrowRight className="h-6 w-6 text-text-inverse" />
         </button>

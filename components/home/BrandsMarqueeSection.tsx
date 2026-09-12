@@ -24,13 +24,13 @@ export default function BrandsMarqueeSection() {
             >
               {Array.from({ length: LOGO_COUNT }).map((_, i) => (
                 <span key={i} className="flex shrink-0 items-center">
-                  <span className="shrink-0 px-10">
+                  <span className="shrink-0 px-6 sm:px-10">
                     <Image
                       src="/logo-white.svg"
                       alt=""
                       width={160}
                       height={55}
-                      className="h-10 w-auto shrink-0 object-contain opacity-70"
+                      className="h-8 w-auto shrink-0 object-contain opacity-70 sm:h-10"
                     />
                   </span>
                   <span

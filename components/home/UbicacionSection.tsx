@@ -12,18 +12,18 @@ export default function UbicacionSection() {
       className="grid grid-cols-1 items-stretch bg-bg-dark lg:grid-cols-2"
     >
       {/* Panel info */}
-      <div className="flex flex-col justify-center gap-5 bg-accent-primary px-8 py-8 text-text-inverse md:px-10 lg:px-12 lg:py-10">
+      <div className="flex flex-col justify-center gap-5 bg-accent-primary px-5 py-10 text-text-inverse sm:px-8 md:px-10 md:py-8 lg:px-12 lg:py-10">
         <div>
-          <h2 className="text-3xl font-medium uppercase leading-none md:text-4xl">
+          <h2 className="text-2xl font-medium uppercase leading-none sm:text-3xl md:text-4xl">
             Dónde estamos
           </h2>
-          <p className="mt-2 max-w-md leading-relaxed text-text-inverse/90">
+          <p className="mt-2 max-w-md text-sm leading-relaxed text-text-inverse/90 sm:text-base">
             Te esperamos en nuestro taller. Pásate sin compromiso o llámanos y
             te asesoramos.
           </p>
         </div>
 
-        <address className="flex items-center gap-3 not-italic leading-relaxed">
+        <address className="flex items-start gap-3 text-sm not-italic leading-relaxed sm:items-center sm:text-base">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-text-inverse/15">
             <MapPin size={18} aria-hidden="true" />
           </span>
@@ -32,10 +32,10 @@ export default function UbicacionSection() {
           </span>
         </address>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
           <a
             href="tel:+34941047695"
-            className="flex items-center gap-2 rounded-lg bg-text-inverse px-4 py-2.5 font-medium text-accent-primary transition hover:bg-bg-dark hover:text-text-inverse"
+            className="flex items-center justify-center gap-2 rounded-lg bg-text-inverse px-4 py-2.5 font-medium text-accent-primary transition hover:bg-bg-dark hover:text-text-inverse sm:w-auto"
           >
             <Phone size={18} aria-hidden="true" />
             941 04 76 95
@@ -44,7 +44,7 @@ export default function UbicacionSection() {
             href="https://www.google.com/maps/dir/?api=1&destination=Vaqueroil+C.+Calahorra+12+26006+Logro%C3%B1o"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 rounded-lg border border-text-inverse/40 px-4 py-2.5 text-sm font-medium uppercase transition hover:bg-text-inverse/10"
+            className="flex items-center justify-center gap-2 rounded-lg border border-text-inverse/40 px-4 py-2.5 text-sm font-medium uppercase transition hover:bg-text-inverse/10"
           >
             <Navigation size={18} aria-hidden="true" />
             Cómo llegar
@@ -79,7 +79,7 @@ export default function UbicacionSection() {
       </div>
 
       {/* Mapa */}
-      <div className="relative min-h-[320px] lg:min-h-full">
+      <div className="relative h-[320px] sm:h-[380px] lg:h-auto lg:min-h-full">
         <iframe
           title="Mapa de Vaqueroil en C. Calahorra, 12, Logroño"
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d23547.185522801108!2d-2.4296745594073483!3d42.461819182894864!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd5aab2f44b4360f%3A0x9cbb66c643f0db3f!2sVaqueroil!5e0!3m2!1ses!2ses!4v1789213239531!5m2!1ses!2ses"

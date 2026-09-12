@@ -2,22 +2,22 @@ import { Wrench, CircuitBoard, Toolbox, LifeBuoy } from "lucide-react";
 
 export default function FeatureBarSection() {
   return (
-    <section className="grid grid-cols-4 w-full px-16 py-8 min-h-[25vh] text-text-inverse bg-felt bg-surface-mid">
-      <div className="flex flex-col justify-center items-center border-r-2 px-5">
-        <Wrench width={48} height={"auto"} />
-        <p className="text-center text-xl">Reparación y mantenimiento</p>
+    <section className="grid w-full grid-cols-1 gap-y-8 bg-felt bg-surface-mid px-5 py-10 text-text-inverse sm:grid-cols-2 sm:px-8 lg:min-h-[25vh] lg:grid-cols-4 lg:px-16 lg:py-8">
+      <div className="flex flex-col items-center justify-center gap-3 px-5 sm:border-r sm:border-text-inverse/15 lg:gap-0 lg:border-r-2 lg:border-current">
+        <Wrench className="h-10 w-10 lg:h-12 lg:w-12" aria-hidden="true" />
+        <p className="text-center text-base sm:text-lg lg:text-xl">Reparación y mantenimiento</p>
       </div>
-      <div className="flex flex-col justify-center items-center border-r-2 px-5">
-        <CircuitBoard width={48} height={"auto"} />
-        <p className="text-center text-xl">Diagnosis electrónica avanzada</p>
+      <div className="flex flex-col items-center justify-center gap-3 border-t border-text-inverse/15 px-5 pt-8 sm:border-t-0 sm:border-r sm:border-text-inverse/15 sm:pt-0 lg:gap-0 lg:border-r-2 lg:border-current">
+        <CircuitBoard className="h-10 w-10 lg:h-12 lg:w-12" aria-hidden="true" />
+        <p className="text-center text-base sm:text-lg lg:text-xl">Diagnosis electrónica avanzada</p>
       </div>
-      <div className="flex flex-col justify-center items-center border-r-2 px-5">
-        <Toolbox width={48} height={"auto"} />
-        <p className="text-center text-xl">Pre-ITV y emisiones</p>
+      <div className="flex flex-col items-center justify-center gap-3 border-t border-text-inverse/15 px-5 pt-8 sm:border-t sm:border-text-inverse/15 sm:pt-8 lg:gap-0 lg:border-t-0 lg:border-r-2 lg:border-current lg:pt-0">
+        <Toolbox className="h-10 w-10 lg:h-12 lg:w-12" aria-hidden="true" />
+        <p className="text-center text-base sm:text-lg lg:text-xl">Pre-ITV y emisiones</p>
       </div>
-      <div className="flex flex-col justify-center items-center px-5">
-        <LifeBuoy width={48} height={"auto"} />
-        <p className="text-center text-xl">Neumáticos y frenos</p>
+      <div className="flex flex-col items-center justify-center gap-3 border-t border-text-inverse/15 px-5 pt-8 sm:border-t sm:border-text-inverse/15 sm:pt-8 lg:gap-0 lg:border-t-0 lg:pt-0">
+        <LifeBuoy className="h-10 w-10 lg:h-12 lg:w-12" aria-hidden="true" />
+        <p className="text-center text-base sm:text-lg lg:text-xl">Neumáticos y frenos</p>
       </div>
     </section>
   );

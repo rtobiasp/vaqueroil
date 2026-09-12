@@ -14,19 +14,21 @@ export default function HeroSection() {
       />
       <div className="absolute inset-0 bg-bg-dark/35" aria-hidden="true" />
 
-      <div className="relative z-10 flex flex-1 flex-col justify-between w-full pt-60 pb-12 text-text-inverse md:px-15">
-        <div className="max-w-[80%]">
-          <h1 className="font-body text-5xl tracking-tighter leading md:text-[112px]">
+      <div className="relative z-10 flex w-full flex-1 flex-col justify-between gap-8 px-5 pt-36 pb-12 text-text-inverse sm:px-8 md:px-15 md:pt-60">
+        <div className="max-w-full sm:max-w-[80%]">
+          <h1 className="font-body text-4xl tracking-tighter leading sm:text-5xl md:text-[112px]">
             Tu vehículo, en las mejores manos.
           </h1>
         </div>
 
-        <div className="w-full flex flex-row justify-between items-center">
-          <p className="max-w-xl text-lg leading-relaxed text-text-inverse/95 md:text-xl">
+        <div className="flex w-full flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
+          <p className="max-w-xl text-base leading-relaxed text-text-inverse/95 sm:text-lg md:text-xl">
             Mantenimiento y reparación profesional para que sigas avanzando con
             total tranquilidad.
           </p>
-          <BrandButton link="/request-appointment-quote" text="Pedir cita" />
+          <div className="w-full sm:w-auto [&>a]:w-full sm:[&>a]:w-auto [&>a]:justify-center">
+            <BrandButton link="/request-appointment-quote" text="Pedir cita" />
+          </div>
         </div>
       </div>
     </section>

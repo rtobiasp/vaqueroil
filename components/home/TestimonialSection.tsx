@@ -61,24 +61,24 @@ export default function TestimonialSection() {
   const [nextEl, setNextEl] = useState<HTMLButtonElement | null>(null);
 
   return (
-    <section className="flex min-h-[80vh] flex-col items-center gap-12 bg-bg-dark bg-felt px-15 py-20">
+    <section className="flex min-h-[80vh] flex-col items-center gap-8 bg-bg-dark bg-felt px-5 py-12 sm:gap-12 sm:px-8 sm:py-16 md:px-15 md:py-20">
       <div className="flex w-full max-w-7xl flex-col items-center gap-4 text-center">
-        <h2 className="text-5xl font-medium leading-[1.05] text-text-inverse md:text-6xl">
+        <h2 className="text-3xl font-medium leading-[1.05] text-text-inverse sm:text-5xl md:text-6xl">
           LO QUE DICEN NUESTROS CLIENTES
         </h2>
-        <p className="max-w-xl text-lg leading-relaxed text-text-inverse/70">
+        <p className="max-w-xl text-base leading-relaxed text-text-inverse/70 sm:text-lg">
           La confianza se gana con trabajo bien hecho. Esto opinan quienes ya
           han pasado por nuestro taller.
         </p>
       </div>
 
-      <div className="relative w-full px-12">
+      <div className="relative w-full sm:px-12">
         <Swiper
           loop={true}
           grabCursor={true}
           centeredSlides={true}
-          slidesPerView={1.15}
-          spaceBetween={24}
+          slidesPerView={1}
+          spaceBetween={16}
           breakpoints={{
             768: { slidesPerView: 2, spaceBetween: 30 },
           }}
@@ -90,7 +90,7 @@ export default function TestimonialSection() {
             <SwiperSlide key={t.name} className="h-auto!">
               {({ isActive }) => (
                 <article
-                  className={`flex h-full min-h-80 flex-col justify-between gap-6 rounded-2xl p-8 transition-all duration-300 ${
+                  className={`flex h-full min-h-80 flex-col justify-between gap-6 rounded-2xl p-6 transition-all duration-300 sm:p-8 ${
                     isActive
                       ? "bg-accent-primary text-text-inverse"
                       : "scale-[0.96] bg-surface-mid text-text-inverse opacity-60"
@@ -120,7 +120,7 @@ export default function TestimonialSection() {
                         ))}
                       </div>
                     </div>
-                    <p className="text-lg leading-relaxed">“{t.description}”</p>
+                    <p className="text-base leading-relaxed sm:text-lg">“{t.description}”</p>
                   </div>
 
                   <footer className="flex items-center gap-4">
@@ -156,7 +156,7 @@ export default function TestimonialSection() {
         <button
           ref={(node) => setPrevEl(node)}
           aria-label="Testimonio anterior"
-          className="absolute left-0 top-1/2 z-10 -translate-y-1/2 rounded-full bg-surface-mid p-2 transition hover:bg-accent-primary hover:cursor-pointer"
+          className="absolute left-0 top-1/2 z-10 hidden -translate-y-1/2 rounded-full bg-surface-mid p-2 transition hover:bg-accent-primary hover:cursor-pointer sm:block"
         >
           <ArrowLeft className="h-6 w-6 text-text-inverse" />
         </button>
@@ -164,7 +164,7 @@ export default function TestimonialSection() {
         <button
           ref={(node) => setNextEl(node)}
           aria-label="Siguiente testimonio"
-          className="absolute right-0 top-1/2 z-10 -translate-y-1/2 rounded-full bg-surface-mid p-2 transition hover:bg-accent-primary hover:cursor-pointer"
+          className="absolute right-0 top-1/2 z-10 hidden -translate-y-1/2 rounded-full bg-surface-mid p-2 transition hover:bg-accent-primary hover:cursor-pointer sm:block"
         >
           <ArrowRight className="h-6 w-6 text-text-inverse" />
         </button>
