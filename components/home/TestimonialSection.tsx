@@ -75,6 +75,7 @@ export default function TestimonialSection() {
       <div className="relative w-full px-12">
         <Swiper
           loop={true}
+          grabCursor={true}
           centeredSlides={true}
           slidesPerView={1.15}
           spaceBetween={24}
@@ -83,13 +84,13 @@ export default function TestimonialSection() {
           }}
           modules={[Navigation]}
           navigation={{ prevEl, nextEl }}
-          className="w-full min-w-0 !py-4"
+          className="w-full min-w-0 py-4!"
         >
           {testimonials.map((t) => (
-            <SwiperSlide key={t.name} className="!h-auto">
+            <SwiperSlide key={t.name} className="h-auto!">
               {({ isActive }) => (
                 <article
-                  className={`flex h-full min-h-[320px] flex-col justify-between gap-6 rounded-2xl p-8 transition-all duration-300 ${
+                  className={`flex h-full min-h-80 flex-col justify-between gap-6 rounded-2xl p-8 transition-all duration-300 ${
                     isActive
                       ? "bg-accent-primary text-text-inverse"
                       : "scale-[0.96] bg-surface-mid text-text-inverse opacity-60"

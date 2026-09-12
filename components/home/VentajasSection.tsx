@@ -63,7 +63,7 @@ export default function VentajasSection() {
               </div>
             </li>
           </ul>
-          <div className="mt-10">
+          <div className="mt-10 w-fit">
             <BrandButton link="/services" text="Ver servicios" />
           </div>
         </article>
