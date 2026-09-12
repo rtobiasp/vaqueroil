@@ -3,7 +3,6 @@
 import { db } from "@/src/db";
 import { appointments, users, vehicles } from "@/src/db/schema";
 import { and, eq, gt, lt, sql } from "drizzle-orm";
-import { redirect } from "next/navigation";
 import { z } from "zod";
 
 const SLOT_DURATION_MINUTES = 45;
@@ -139,12 +138,26 @@ export async function processAppointmentForm(
         vehicle: vehicle.id,
       });
     });
-  } catch {
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      error.message === "El horario seleccionado ya no está disponible."
+    ) {
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
     return {
       success: false,
       message: "No se pudo enviar la solicitud. Inténtalo de nuevo.",
     };
   }
+
+  return {
+    success: true,
+    message: "Solicitud enviada correctamente. Te contactaremos pronto.",
+  };
 }
 
 export async function getAvailableSlotsForDate(dateValue: string) {
