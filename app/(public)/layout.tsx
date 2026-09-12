@@ -1,5 +1,5 @@
+import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import Link from "next/link";
 
 export default function PublicLayout({
   children,
@@ -10,9 +10,7 @@ export default function PublicLayout({
     <>
       <Header />
       {children}
-      <footer>
-        <Link href={"/admin/dashboard"}>Acceso empleados</Link>
-      </footer>
+      <Footer />
     </>
   );
 }
