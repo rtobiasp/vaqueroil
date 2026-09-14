@@ -160,16 +160,28 @@ export async function processAppointmentForm(
   };
 }
 
-export async function getAvailableSlotsForDate(dateValue: string) {
-  const start = new Date(`${dateValue}T00:00:00.000Z`);
-  const end = new Date(`${dateValue}T23:59:59.999Z`);
+type AppointmentProp = typeof appointments.$inferSelect;
 
-  const appointmentsForDate = await db
-    .select()
-    .from(appointments)
-    .where(
-      and(lt(appointments.fechaInicio, end), gt(appointments.fechaFin, start)),
-    );
+export async function getAvailableSlotsForDate(
+  dateValue: string,
+  existingAppointments?: AppointmentProp[],
+) {
+  let appointmentsForDate = existingAppointments;
+
+  if (!existingAppointments) {
+    const start = new Date(`${dateValue}T00:00:00.000Z`);
+    const end = new Date(`${dateValue}T23:59:59.999Z`);
+
+    appointmentsForDate = await db
+      .select()
+      .from(appointments)
+      .where(
+        and(
+          lt(appointments.fechaInicio, end),
+          gt(appointments.fechaFin, start),
+        ),
+      );
+  }
 
   const slots: { value: string; endValue: string; label: string }[] = [];
   const firstSlot = new Date(
@@ -192,7 +204,7 @@ export async function getAvailableSlotsForDate(dateValue: string) {
       break;
     }
 
-    const isOccupied = appointmentsForDate.some(
+    const isOccupied = appointmentsForDate?.some(
       (appointment) =>
         appointment.fechaInicio < slotEnd && appointment.fechaFin > slotStart,
     );
