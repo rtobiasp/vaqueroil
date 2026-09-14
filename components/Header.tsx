@@ -3,8 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import logo_img from "@/public/logo.png";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
+import { gsap, useGSAP, isReducedMotion } from "@/lib/gsap";
 
 const links = [
   { label: "SERVICIOS", href: "/services" },
@@ -15,6 +16,22 @@ const links = [
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const root = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      if (!root.current || isReducedMotion()) return;
+      const tween = gsap.fromTo(
+        root.current,
+        { autoAlpha: 0, y: -18 },
+        { autoAlpha: 1, y: 0, duration: 0.7, ease: "power3.out", delay: 0.05 },
+      );
+      return () => {
+        tween.kill();
+      };
+    },
+    { scope: root },
+  );
 
   useEffect(() => {
     const onScroll = () => {
@@ -30,6 +47,7 @@ export default function Header() {
 
   return (
     <header
+      ref={root}
       className={`sticky top-3 z-50 flex h-20 w-full items-center justify-between px-4 text-text-inverse transition-colors duration-300 sm:top-5 sm:px-8 lg:px-15`}
     >
       <Link href="/" className="shrink-0" aria-label="Vaqueroil - inicio">

@@ -1,3 +1,5 @@
+import Reveal from "@/components/animations/Reveal";
+
 type SectionHeadingProps = {
   title: string;
   description?: string;
@@ -15,7 +17,7 @@ export default function SectionHeading({
     align === "center" ? "items-center text-center" : "items-start text-left";
 
   return (
-    <div className={`flex w-full flex-col ${alignClasses}`}>
+    <Reveal className={`flex w-full flex-col ${alignClasses}`}>
       <h2
         className={`max-w-3xl text-3xl leading-[1.05] font-medium sm:text-5xl md:text-6xl ${
           dark ? "text-text-inverse" : "text-text-main"
@@ -32,6 +34,6 @@ export default function SectionHeading({
           {description}
         </p>
       ) : null}
-    </div>
+    </Reveal>
   );
 }

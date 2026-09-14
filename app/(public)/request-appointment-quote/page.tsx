@@ -1,6 +1,7 @@
 import HeroLanding from "@/components/HeroLanding";
 import SectionHeading from "@/components/shared/SectionHeading";
 import CtaBanner from "@/components/shared/CtaBanner";
+import Reveal from "@/components/animations/Reveal";
 import { db } from "@/src/db/index";
 import { services } from "@/src/db/schema";
 import { AppointmentForm } from "./appointment-form";
@@ -33,6 +34,7 @@ export default async function RequestAppointmentQuotePage() {
           <div className="grid grid-cols-1 items-start gap-4 sm:gap-5 lg:grid-cols-[1fr_360px]">
             <AppointmentForm services={servicios} />
 
+            <Reveal delay={0.1} y={24}>
             <aside className="flex flex-col gap-4 sm:gap-5 lg:sticky lg:top-24">
               <div className="rounded-2xl bg-surface-mid p-6 text-text-inverse sm:p-7">
                 <h2 className="text-lg font-medium">¿Cómo funciona?</h2>
@@ -99,6 +101,7 @@ export default async function RequestAppointmentQuotePage() {
                 </div>
               </div>
             </aside>
+            </Reveal>
           </div>
         </div>
       </section>

@@ -1,5 +1,6 @@
 import { CalendarCheck, Mail, MapPin, Phone } from "lucide-react";
 import SectionHeading from "@/components/shared/SectionHeading";
+import StaggerGroup from "@/components/animations/StaggerGroup";
 
 const channels = [
   {
@@ -41,32 +42,43 @@ export default function ContactChannels() {
           title="ELIGE CÓMO CONTACTAR"
           description="Llámanos, reserva por la web, escríbenos o pásate por el taller. Abrimos de lunes a viernes: 9:00–13:30 y 16:00–19:30."
         />
-        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4">
-          {channels.map(({ icon: Icon, title, description, actionLabel, actionHref }) => (
-            <li
-              key={title}
-              className="flex flex-col justify-between gap-5 rounded-2xl bg-surface-mid p-6 text-text-inverse sm:p-7"
-            >
-              <div className="flex flex-col gap-3">
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-primary">
-                  <Icon size={24} aria-hidden="true" />
-                </span>
-                <h3 className="text-xl font-medium">{title}</h3>
-                <p className="text-sm leading-relaxed text-text-inverse/70 sm:text-base">
-                  {description}
-                </p>
-              </div>
-              <a
-                href={actionHref}
-                target={actionHref.startsWith("http") ? "_blank" : undefined}
-                rel={actionHref.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="font-link text-sm uppercase tracking-wide text-accent-primary transition-colors hover:text-text-inverse"
-              >
-                {actionLabel} →
-              </a>
-            </li>
-          ))}
-        </ul>
+        <StaggerGroup stagger={0.09}>
+          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4">
+            {channels.map(
+              ({ icon: Icon, title, description, actionLabel, actionHref }) => (
+                <li
+                  key={title}
+                  data-stagger
+                  className="flex flex-col justify-between gap-5 rounded-2xl bg-surface-mid p-6 text-text-inverse sm:p-7"
+                >
+                  <div className="flex flex-col gap-3">
+                    <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-primary">
+                      <Icon size={24} aria-hidden="true" />
+                    </span>
+                    <h3 className="text-xl font-medium">{title}</h3>
+                    <p className="text-sm leading-relaxed text-text-inverse/70 sm:text-base">
+                      {description}
+                    </p>
+                  </div>
+                  <a
+                    href={actionHref}
+                    target={
+                      actionHref.startsWith("http") ? "_blank" : undefined
+                    }
+                    rel={
+                      actionHref.startsWith("http")
+                        ? "noopener noreferrer"
+                        : undefined
+                    }
+                    className="font-link text-sm uppercase tracking-wide text-accent-primary transition-colors hover:text-text-inverse"
+                  >
+                    {actionLabel} →
+                  </a>
+                </li>
+              ),
+            )}
+          </ul>
+        </StaggerGroup>
       </div>
     </section>
   );

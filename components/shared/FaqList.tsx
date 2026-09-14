@@ -1,3 +1,5 @@
+import StaggerGroup from "@/components/animations/StaggerGroup";
+
 type FaqItem = {
   question: string;
   answer: string;
@@ -5,10 +7,15 @@ type FaqItem = {
 
 export default function FaqList({ items }: { items: FaqItem[] }) {
   return (
-    <div className="flex w-full flex-col gap-3">
+    <StaggerGroup
+      className="flex w-full flex-col gap-3"
+      stagger={0.07}
+      y={20}
+    >
       {items.map((item) => (
         <details
           key={item.question}
+          data-stagger
           className="group rounded-2xl bg-surface-mid p-5 text-text-inverse transition-colors open:bg-surface-mid/80 sm:p-6"
         >
           <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-medium sm:text-lg [&::-webkit-details-marker]:hidden">
@@ -25,6 +32,6 @@ export default function FaqList({ items }: { items: FaqItem[] }) {
           </p>
         </details>
       ))}
-    </div>
+    </StaggerGroup>
   );
 }

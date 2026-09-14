@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { MoveRight } from "lucide-react";
+import StaggerGroup from "@/components/animations/StaggerGroup";
 
 export type ServiceItem = {
   id: string;
@@ -70,12 +71,14 @@ export default function ServicesGrid({ services }: { services: ServiceItem[] }) 
   }
 
   return (
+    <StaggerGroup stagger={0.08}>
     <ul className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
       {services.map((service) => {
         const Icon = iconForService(service.name);
         return (
           <li
             key={service.id}
+            data-stagger
             className="flex flex-col justify-between gap-6 rounded-2xl bg-surface-mid p-6 text-text-inverse transition-colors hover:bg-surface-mid/80 sm:p-8"
           >
             <div className="flex flex-col gap-4">
@@ -121,5 +124,6 @@ export default function ServicesGrid({ services }: { services: ServiceItem[] }) 
         );
       })}
     </ul>
+    </StaggerGroup>
   );
 }

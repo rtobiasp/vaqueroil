@@ -7,6 +7,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 import { ArrowLeft, ArrowRight, BadgeCheck, Quote, Star } from "lucide-react";
+import Reveal from "@/components/animations/Reveal";
 
 const testimonials = [
   {
@@ -62,7 +63,8 @@ export default function TestimonialSection() {
 
   return (
     <section className="flex min-h-[80vh] flex-col items-center gap-8 bg-bg-dark bg-felt px-5 py-12 sm:gap-12 sm:px-8 sm:py-16 md:px-15 md:py-20">
-      <div className="flex w-full max-w-7xl flex-col items-center gap-4 text-center">
+      <Reveal className="flex w-full max-w-7xl flex-col items-center gap-4 text-center">
+        <div className="flex w-full max-w-7xl flex-col items-center gap-4 text-center">
         <h2 className="text-3xl font-medium leading-[1.05] text-text-inverse sm:text-5xl md:text-6xl">
           LO QUE DICEN NUESTROS CLIENTES
         </h2>
@@ -70,8 +72,10 @@ export default function TestimonialSection() {
           La confianza se gana con trabajo bien hecho. Esto opinan quienes ya
           han pasado por nuestro taller.
         </p>
-      </div>
+        </div>
+      </Reveal>
 
+      <Reveal className="relative w-full sm:px-12" y={36}>
       <div className="relative w-full sm:px-12">
         <Swiper
           loop={true}
@@ -168,7 +172,8 @@ export default function TestimonialSection() {
         >
           <ArrowRight className="h-6 w-6 text-text-inverse" />
         </button>
-      </div>
+        </div>
+      </Reveal>
     </section>
   );
 }

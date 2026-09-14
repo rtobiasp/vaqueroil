@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Reveal from "@/components/animations/Reveal";
 
 const LOGO_COUNT = 8;
 
@@ -12,37 +13,37 @@ export default function BrandsMarqueeSection() {
         aria-hidden="true"
         className="h-4 bg-[url('/race_border.svg')] bg-repeat-x bg-[size:auto_100%]"
       />
-      <div className="mask-[linear-gradient(to_right,transparent,black_10%,black_90%,transparent)] overflow-hidden py-6">
-        <div
-          className="animate-marquee flex w-max will-change-transform"
-        >
-          {[0, 1].map((copy) => (
-            <div
-              key={copy}
-              aria-hidden={copy === 1}
-              className="flex shrink-0 items-center"
-            >
-              {Array.from({ length: LOGO_COUNT }).map((_, i) => (
-                <span key={i} className="flex shrink-0 items-center">
-                  <span className="shrink-0 px-6 sm:px-10">
-                    <Image
-                      src="/logo-white.svg"
-                      alt=""
-                      width={160}
-                      height={55}
-                      className="h-8 w-auto shrink-0 object-contain opacity-70 sm:h-10"
+      <Reveal y={16} duration={0.6}>
+        <div className="mask-[linear-gradient(to_right,transparent,black_10%,black_90%,transparent)] overflow-hidden py-6">
+          <div className="animate-marquee flex w-max will-change-transform">
+            {[0, 1].map((copy) => (
+              <div
+                key={copy}
+                aria-hidden={copy === 1}
+                className="flex shrink-0 items-center"
+              >
+                {Array.from({ length: LOGO_COUNT }).map((_, i) => (
+                  <span key={i} className="flex shrink-0 items-center">
+                    <span className="shrink-0 px-6 sm:px-10">
+                      <Image
+                        src="/logo-white.svg"
+                        alt=""
+                        width={160}
+                        height={55}
+                        className="h-8 w-auto shrink-0 object-contain opacity-70 sm:h-10"
+                      />
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent-primary/70"
                     />
                   </span>
-                  <span
-                    aria-hidden="true"
-                    className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent-primary/70"
-                  />
-                </span>
-              ))}
-            </div>
-          ))}
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      </Reveal>
       <div
         aria-hidden="true"
         className="h-4 bg-[url('/race_border.svg')] bg-repeat-x bg-[size:auto_100%]"

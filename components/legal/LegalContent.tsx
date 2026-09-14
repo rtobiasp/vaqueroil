@@ -1,4 +1,5 @@
 import SectionHeading from "@/components/shared/SectionHeading";
+import Reveal from "@/components/animations/Reveal";
 
 type LegalSection = {
   id: string;
@@ -98,11 +99,11 @@ export default function LegalContent() {
 
         <div className="flex flex-col gap-4">
           {sections.map((section) => (
-            <article
-              key={section.id}
-              id={section.id}
-              className="scroll-mt-28 rounded-2xl bg-surface-mid p-6 text-text-inverse sm:p-8"
-            >
+            <Reveal key={section.id} y={22} duration={0.6}>
+              <article
+                id={section.id}
+                className="scroll-mt-28 rounded-2xl bg-surface-mid p-6 text-text-inverse sm:p-8"
+              >
               <h2 className="text-xl font-medium sm:text-2xl">
                 {section.title}
               </h2>
@@ -127,7 +128,8 @@ export default function LegalContent() {
                   ))}
                 </ul>
               ) : null}
-            </article>
+              </article>
+            </Reveal>
           ))}
         </div>
 

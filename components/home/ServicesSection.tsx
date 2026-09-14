@@ -8,6 +8,7 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import { useState } from "react";
+import Reveal from "@/components/animations/Reveal";
 
 type Service = typeof services.$inferSelect;
 
@@ -21,10 +22,13 @@ export default function ServicesSection({ services }: ServicesSectionProps) {
 
   return (
     <section className="flex min-h-[80vh] flex-col items-center gap-8 bg-[url(@/public/black-felt.png)] px-5 py-12 sm:gap-12 sm:px-8 md:gap-15 md:px-15 md:py-16">
-      <h2 className="text-center font-medium text-3xl text-text-inverse sm:text-5xl md:text-6xl">
-        NUESTROS SERVICIOS
-      </h2>
-      <div className="relative h-[60vh] min-h-[480px] w-full sm:px-12 md:min-h-0">
+      <Reveal>
+        <h2 className="text-center font-medium text-3xl text-text-inverse sm:text-5xl md:text-6xl">
+          NUESTROS SERVICIOS
+        </h2>
+      </Reveal>
+      <Reveal className="w-full" y={36}>
+        <div className="relative h-[60vh] min-h-[480px] w-full sm:px-12 md:min-h-0">
         <Swiper
           className="h-full w-full min-w-0"
           spaceBetween={16}
@@ -65,7 +69,8 @@ export default function ServicesSection({ services }: ServicesSectionProps) {
         >
           <ArrowRight className="h-6 w-6 text-text-inverse" />
         </button>
-      </div>
+        </div>
+      </Reveal>
     </section>
   );
 }
