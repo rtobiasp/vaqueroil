@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import ScrollBackToTop from "@/components/ui/ScrollBackToTop";
 
 export default function PublicLayout({
   children,
@@ -11,6 +12,7 @@ export default function PublicLayout({
       <Header />
       {children}
       <Footer />
+      <ScrollBackToTop />
     </>
   );
 }
