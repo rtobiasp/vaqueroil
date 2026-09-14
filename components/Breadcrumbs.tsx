@@ -7,6 +7,19 @@ import { usePathname } from "next/navigation";
 export default function Breadcrumbs() {
   const pathname = usePathname();
 
+  const labels: Record<string, string> = {
+    "about-us": "Nosotros",
+    services: "Servicios",
+    contact: "Contacto",
+    legal: "Aviso legal",
+    "request-appointment-quote": "Pedir cita",
+    admin: "Administración",
+    dashboard: "Panel",
+    appointments: "Citas",
+    cars: "Vehículos",
+    users: "Usuarios",
+  };
+
   // Limpiar y separar la ruta (ej: /productos/categoria/1 -> ['productos', 'categoria', '1'])
   const segments = pathname.split("/").filter(Boolean);
 
@@ -14,7 +27,7 @@ export default function Breadcrumbs() {
 
   return (
     <nav
-      aria-label="Breadcrumb"
+      aria-label="Migas de pan"
       className="inline-flex max-w-full items-center py-1.5 pr-4 pl-4"
     >
       <ol className="flex min-w-0 items-center gap-1.5 text-[13px] font-medium tracking-wide whitespace-nowrap text-white/75">
@@ -31,10 +44,12 @@ export default function Breadcrumbs() {
           const href = `/${segments.slice(0, index + 1).join("/")}`;
           const isLast = index === segments.length - 1;
 
-          // Formatear el texto (reemplazar guiones y capitalizar)
-          const formattedName = segment
-            .replace(/-/g, " ")
-            .replace(/^\w/, (c) => c.toUpperCase());
+          // Formatear el texto: usar etiqueta en español si existe,
+          // si no reemplazar guiones y capitalizar
+          const decoded = decodeURIComponent(segment);
+          const formattedName =
+            labels[segment] ??
+            decoded.replace(/-/g, " ").replace(/^\w/, (c) => c.toUpperCase());
 
           return (
             <React.Fragment key={href}>
