@@ -13,6 +13,8 @@ import {
 import Card from "./Card";
 import { getCitasHoy } from "./actions";
 
+export const dynamic = "force-dynamic";
+
 const resumen = [
   {
     titulo: "Citas hoy",

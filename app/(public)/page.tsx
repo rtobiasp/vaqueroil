@@ -8,6 +8,8 @@ import TestimonialSection from "@/components/home/TestimonialSection";
 import UbicacionSection from "@/components/home/UbicacionSection";
 import VentajasSection from "@/components/home/VentajasSection";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const serviceList = (await db.select().from(services)) || [];
 
