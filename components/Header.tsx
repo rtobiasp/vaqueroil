@@ -6,7 +6,11 @@ import logo_img from "@/public/logo.png";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 
-const links = ["SERVICIOS", "CONTACTO", "SOBRE NOSOTROS"];
+const links = [
+  { label: "SERVICIOS", href: "/services" },
+  { label: "CONTACTO", href: "/request-appointment-quote" },
+  { label: "SOBRE NOSOTROS", href: "/about-us" },
+];
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -44,30 +48,16 @@ export default function Header() {
         className="hidden h-[70%] rounded-xl bg-bg-light p-1 text-text-main lg:block"
       >
         <ul className="flex h-full flex-row gap-1">
-          <li>
-            <a
-              href="/request-appointment-quote"
-              className="flex h-full items-center justify-between rounded-xl px-6 py-1 transition-colors duration-200 hover:bg-accent-primary hover:text-text-inverse"
-            >
-              SERVICIOS
-            </a>
-          </li>
-          <li>
-            <a
-              href="/request-appointment-quote"
-              className="flex h-full items-center justify-between rounded-xl px-6 py-1 transition-colors duration-200 hover:bg-accent-primary hover:text-text-inverse"
-            >
-              CONTACTO
-            </a>
-          </li>
-          <li>
-            <a
-              href="/request-appointment-quote"
-              className="flex h-full items-center justify-between rounded-xl px-6 py-1 transition-colors duration-200 hover:bg-accent-primary hover:text-text-inverse"
-            >
-              SOBRE NOSOTROS
-            </a>
-          </li>
+          {links.map((link) => (
+            <li key={link.label}>
+              <Link
+                href={link.href}
+                className="flex h-full items-center justify-between rounded-xl px-6 py-1 transition-colors duration-200 hover:bg-accent-primary hover:text-text-inverse"
+              >
+                {link.label}
+              </Link>
+            </li>
+          ))}
           <li>
             <a
               href="/request-appointment-quote"
@@ -86,17 +76,21 @@ export default function Header() {
         aria-label={open ? "Cerrar menú" : "Abrir menú"}
         className="flex h-11 w-11 items-center justify-center rounded-xl bg-bg-light text-text-main motion-safe:transition-transform motion-safe:active:scale-95 lg:hidden"
       >
-        <span className="relative block h-[22px] w-[22px]" aria-hidden="true">
+        <span className="relative block h-5.5 w-5.5" aria-hidden="true">
           <Menu
             size={22}
             className={`absolute inset-0 motion-safe:transition-all motion-safe:duration-300 ${
-              open ? "scale-50 rotate-90 opacity-0" : "scale-100 rotate-0 opacity-100"
+              open
+                ? "scale-50 rotate-90 opacity-0"
+                : "scale-100 rotate-0 opacity-100"
             }`}
           />
           <X
             size={22}
             className={`absolute inset-0 motion-safe:transition-all motion-safe:duration-300 ${
-              open ? "scale-100 rotate-0 opacity-100" : "scale-50 -rotate-90 opacity-0"
+              open
+                ? "scale-100 rotate-0 opacity-100"
+                : "scale-50 -rotate-90 opacity-0"
             }`}
           />
         </span>
@@ -107,31 +101,33 @@ export default function Header() {
         aria-hidden={!open}
         className={`absolute inset-x-4 top-full mt-2 origin-top overflow-hidden rounded-2xl bg-bg-light text-text-main shadow-xl motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out lg:hidden ${
           open
-            ? "visible max-h-[420px] scale-100 translate-y-0 opacity-100"
+            ? "visible max-h-105 scale-100 translate-y-0 opacity-100"
             : "invisible max-h-0 scale-[0.98] -translate-y-2 opacity-0"
         }`}
       >
         <ul className="flex flex-col p-2">
-          {links.map((label, i) => (
+          {links.map((link, i) => (
             <li
-              key={label}
+              key={link.label}
               style={{ transitionDelay: open ? `${100 + i * 60}ms` : "0ms" }}
               className={`motion-safe:transition-all motion-safe:duration-300 ${
                 open ? "translate-y-0 opacity-100" : "-translate-y-1 opacity-0"
               }`}
             >
-              <a
-                href="/request-appointment-quote"
+              <Link
+                href={link.href}
                 onClick={() => setOpen(false)}
                 tabIndex={open ? undefined : -1}
                 className="block rounded-xl px-4 py-3 text-sm font-medium transition-colors hover:bg-accent-primary hover:text-text-inverse"
               >
-                {label}
-              </a>
+                {link.label}
+              </Link>
             </li>
           ))}
           <li
-            style={{ transitionDelay: open ? `${100 + links.length * 60}ms` : "0ms" }}
+            style={{
+              transitionDelay: open ? `${100 + links.length * 60}ms` : "0ms",
+            }}
             className={`mt-1 border-t border-text-main/10 pt-2 motion-safe:transition-all motion-safe:duration-300 ${
               open ? "translate-y-0 opacity-100" : "-translate-y-1 opacity-0"
             }`}
