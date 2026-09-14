@@ -18,15 +18,11 @@ export default function VentajasSection() {
           />
         </div>
         <article className="relative z-10 w-full rounded-2xl bg-surface-mid p-6 text-text-inverse shadow-[0_30px_80px_-15px_rgba(0,0,0,0.85)] sm:p-8 lg:-ml-36 lg:w-[58%] lg:p-12">
-          <p className="font-link text-xs uppercase tracking-widest text-accent-primary sm:text-sm">
-            Nuestras ventajas
-          </p>
-          <h2 className="mt-3 text-3xl leading-[1.05] font-medium sm:text-5xl md:text-6xl">
+          <h2 className="text-3xl leading-[1.05] font-medium sm:text-5xl md:text-6xl">
             POR QUÉ ELEGIRNOS
           </h2>
           <p className="mt-4 max-w-xl text-base leading-relaxed text-text-inverse/80 sm:mt-5 sm:text-lg">
-            Cuidamos tu vehículo como si fuera el nuestro, con diagnóstico
-            preciso y trato transparente.
+            Tres cosas que intentamos hacer bien cada día.
           </p>
           <ul className="mt-6 flex flex-col gap-5 sm:mt-8">
             <li className="flex items-start gap-3 sm:gap-4">
@@ -35,18 +31,18 @@ export default function VentajasSection() {
                 size={28}
               />
               <div>
-                <p className="text-lg font-medium sm:text-xl">Transparencia total</p>
+                <p className="text-lg font-medium sm:text-xl">Precio claro</p>
                 <p className="text-sm text-text-inverse/70 sm:text-base">
-                  Presupuesto claro antes de cada reparación, sin sorpresas.
+                  Te decimos lo que cuesta antes de empezar.
                 </p>
               </div>
             </li>
             <li className="flex items-start gap-3 sm:gap-4">
               <Clock className="mt-1 shrink-0 text-accent-primary" size={28} />
               <div>
-                <p className="text-lg font-medium sm:text-xl">Rapidez y puntualidad</p>
+                <p className="text-lg font-medium sm:text-xl">Te decimos cuándo está</p>
                 <p className="text-sm text-text-inverse/70 sm:text-base">
-                  Entrega en plazo para que sigas avanzando con tranquilidad.
+                  Y si algo se retrasa, te avisamos.
                 </p>
               </div>
             </li>
@@ -56,9 +52,9 @@ export default function VentajasSection() {
                 size={28}
               />
               <div>
-                <p className="text-lg font-medium sm:text-xl">Garantía profesional</p>
+                <p className="text-lg font-medium sm:text-xl">Trabajo garantizado</p>
                 <p className="text-sm text-text-inverse/70 sm:text-base">
-                  Técnicos expertos y recambios de calidad contrastada.
+                  Si algo de lo que hemos tocado falla, lo miramos.
                 </p>
               </div>
             </li>
