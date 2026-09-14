@@ -2,6 +2,11 @@ import { db } from "@/src/db";
 import { appointments, services, users, vehicles } from "@/src/db/schema";
 import { asc, eq, getTableColumns } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
+import {
+  madridDateKey,
+  madridDayRangeUtc,
+  madridParts,
+} from "@/lib/schedule";
 
 // Tag compartido para invalidar el dashboard cuando cambien los appointments.
 // En Server Actions: `updateTag(APPOINTMENTS_CACHE_TAG)`.
@@ -65,15 +70,13 @@ export type CitaConDetalles = Awaited<
 // ---------------------------------------------------------------------------
 
 function inicioDelDia(ref: Date) {
-  const d = new Date(ref);
-  d.setHours(0, 0, 0, 0);
-  return d;
+  // Límites del día en hora de Logroño, coherentes con los huecos del taller.
+  // La clave siempre deriva de una fecha real, el fallback es inalcanzable.
+  return madridDayRangeUtc(madridDateKey(ref))?.start ?? ref;
 }
 
 function finDelDia(ref: Date) {
-  const d = new Date(ref);
-  d.setHours(23, 59, 59, 999);
-  return d;
+  return madridDayRangeUtc(madridDateKey(ref))?.end ?? ref;
 }
 
 // ---------------------------------------------------------------------------
@@ -152,12 +155,12 @@ export function getIngresosDelMes(
   citas: CitaConDetalles[],
   ref: Date = new Date(),
 ): { total: number; numCitas: number } {
-  const mismoMes = citas.filter(
-    (cita) =>
-      cita.status === "COMPLETED" &&
-      cita.fechaInicio.getMonth() === ref.getMonth() &&
-      cita.fechaInicio.getFullYear() === ref.getFullYear(),
-  );
+  const refParts = madridParts(ref);
+  const mismoMes = citas.filter((cita) => {
+    if (cita.status !== "COMPLETED") return false;
+    const partes = madridParts(cita.fechaInicio);
+    return partes.month === refParts.month && partes.year === refParts.year;
+  });
 
   const total = mismoMes.reduce(
     (acc, cita) => acc + Number(cita.servicioPrecio ?? 0),

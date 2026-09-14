@@ -23,6 +23,7 @@ import {
   type CitaConDetalles,
 } from "./actions";
 import { getAvailableSlotsForDate } from "@/app/(public)/request-appointment-quote/actions";
+import { madridDateKey } from "@/lib/schedule";
 
 // force-dynamic: la página se renderiza en cada visita (para `new Date()` actual),
 // pero `getAllAppointments()` sigue servida desde Data Cache hasta `revalidateTag`.
@@ -32,6 +33,7 @@ function formatearHora(fecha: Date) {
   return fecha.toLocaleTimeString("es-ES", {
     hour: "2-digit",
     minute: "2-digit",
+    timeZone: "Europe/Madrid",
   });
 }
 
@@ -41,6 +43,7 @@ function formatearFecha(fecha: Date) {
     month: "short",
     hour: "2-digit",
     minute: "2-digit",
+    timeZone: "Europe/Madrid",
   });
 }
 
@@ -94,10 +97,7 @@ export default async function Dashboard() {
   const ultimos = getUltimosClientes(todasLasCitas);
 
   const huecosLibres = (
-    await getAvailableSlotsForDate(
-      nowDate.toLocaleDateString("en-CA"),
-      citasHoy,
-    )
+    await getAvailableSlotsForDate(madridDateKey(nowDate), citasHoy)
   ).length;
 
   const resumen = [

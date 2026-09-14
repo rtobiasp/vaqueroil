@@ -208,7 +208,10 @@ export function AppointmentForm({ services }: { services: Service[] }) {
               name="phone"
               id="phone"
               autoComplete="tel"
+              inputMode="tel"
+              minLength={9}
               placeholder="600 123 456"
+              title="Móvil o fijo español de 9 dígitos, ej. 600 123 456"
               required
               className={inputClasses}
             />
@@ -230,7 +233,8 @@ export function AppointmentForm({ services }: { services: Service[] }) {
               name="license_plate"
               id="license_plate"
               autoComplete="off"
-              placeholder="1234 ABC"
+              placeholder="1234 BCD"
+              title="Matrícula española, ej. 1234 BCD"
               required
               className={cn(inputClasses, "uppercase")}
             />
@@ -246,9 +250,13 @@ export function AppointmentForm({ services }: { services: Service[] }) {
               id="vin"
               autoComplete="off"
               placeholder="17 caracteres"
+              title="17 caracteres: letras (sin I, O ni Q) y números"
               maxLength={17}
               className={cn(inputClasses, "uppercase")}
             />
+            <p className={hintClasses}>
+              17 caracteres: letras (sin I, O ni Q) y números.
+            </p>
             <FieldError errors={state.errors} field="vin" />
           </div>
           <div className="flex flex-col gap-2">
@@ -454,7 +462,7 @@ export function AppointmentForm({ services }: { services: Service[] }) {
 
       <button
         type="submit"
-        disabled={pending || isPending}
+        disabled={pending || isPending || !selectedSlot}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-accent-primary px-6 py-4 text-sm font-semibold tracking-wide text-text-inverse uppercase transition hover:bg-accent-primary-hover focus-visible:ring-2 focus-visible:ring-accent-primary/50 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 sm:text-base"
       >
         {pending ? (
@@ -470,8 +478,9 @@ export function AppointmentForm({ services }: { services: Service[] }) {
         )}
       </button>
       <p className="text-center text-xs leading-relaxed text-text-inverse/50">
-        Al enviar aceptas que te contactemos para gestionar tu cita. Cada reserva
-        dura 45 minutos.
+        {!selectedSlot && !pending
+          ? "Elige un día y una hora disponible para poder confirmar la reserva."
+          : "Al enviar aceptas que te contactemos para gestionar tu cita. Cada reserva dura 45 minutos."}
       </p>
     </form>
   );

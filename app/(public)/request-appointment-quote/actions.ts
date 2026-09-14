@@ -1,15 +1,21 @@
 "use server";
 
 import { db } from "@/src/db";
-import { appointments, users, vehicles } from "@/src/db/schema";
-import { and, eq, gt, lt, sql } from "drizzle-orm";
+import { appointments, services, users, vehicles } from "@/src/db/schema";
+import { and, eq, gt, lt, ne, sql } from "drizzle-orm";
 import { updateTag } from "next/cache";
 import { APPOINTMENTS_CACHE_TAG } from "@/app/(admin)/admin/dashboard/actions";
-import { z } from "zod";
-
-const SLOT_DURATION_MINUTES = 45;
-const OPENING_HOUR = 9;
-const CLOSING_HOUR = 18;
+import {
+  appointmentSchema,
+  generateSlots,
+  madridDayRangeUtc,
+  normalizePhone,
+  normalizePlate,
+  normalizeVin,
+  parseDateKey,
+  validateSlot,
+  type BusyInterval,
+} from "@/lib/schedule";
 
 export type AppointmentActionState = {
   success: boolean;
@@ -17,50 +23,31 @@ export type AppointmentActionState = {
   errors?: Record<string, string[]>;
 };
 
-const appointmentSchema = z
-  .object({
-    full_name: z.string().trim().min(2, "El nombre es obligatorio").max(100),
-    email: z
-      .email("Email con formato no váido.")
-      .nonempty("Debes inroducir un email."),
-    phone: z.string().trim().min(7, "El teléfono no es válido").max(30),
-    service: z.uuid("El servicio no es válido"),
-    license_plate: z
-      .string()
-      .trim()
-      .min(1, "La matrícula es obligatoria")
-      .max(20),
-    brand: z.string().trim().min(1, "La marca es obligatoria").max(50),
-    model: z.string().trim().min(1, "El modelo es obligatorio").max(50),
-    year: z.coerce
-      .number()
-      .int()
-      .min(1900, "El año no es válido")
-      .max(new Date().getFullYear() + 1, "El año no es válido"),
-    vin: z.string().trim().max(17, "El VIN no es válido").optional(),
-    appointment_start: z.coerce.date("La hora de la cita es obligatoria"),
-    notes: z
-      .string()
-      .trim()
-      .max(1000, "Las notas son demasiado largas")
-      .optional(),
-    appointment_end: z.coerce.date("La hora de fin es obligatoria"),
-  })
-  .refine(
-    (data) =>
-      data.appointment_end.getTime() - data.appointment_start.getTime() ===
-      SLOT_DURATION_MINUTES * 60_000,
-    {
-      path: ["appointment_end"],
-      message: "La cita debe durar 45 minutos.",
-    },
-  );
+const SLOT_CONFLICT_MESSAGE = "El horario seleccionado ya no está disponible.";
+const MISSING_SLOT_MESSAGE = "Elige un día y una hora disponible.";
 
 export async function processAppointmentForm(
   _previousState: AppointmentActionState,
   formData: FormData,
 ): Promise<AppointmentActionState> {
   const data = Object.fromEntries(formData);
+
+  // Los inputs de fecha/hora son hidden: si llegan vacíos es que no se eligió
+  // hueco en la UI. Mensaje claro en lugar del genérico de tipo fecha.
+  const rawStart = data.appointment_start;
+  const rawEnd = data.appointment_end;
+  if (
+    typeof rawStart !== "string" ||
+    rawStart.trim() === "" ||
+    typeof rawEnd !== "string" ||
+    rawEnd.trim() === ""
+  ) {
+    return {
+      success: false,
+      message: MISSING_SLOT_MESSAGE,
+      errors: { appointment_start: [MISSING_SLOT_MESSAGE] },
+    };
+  }
 
   const result = appointmentSchema.safeParse(data);
 
@@ -73,27 +60,94 @@ export async function processAppointmentForm(
   }
 
   const values = result.data;
-  const normalizedEmail = values.email.trim().toLowerCase();
-  const normalizedLicensePlate = values.license_plate.trim().toUpperCase();
+  const normalizedEmail = values.email;
+  const normalizedPhone = normalizePhone(values.phone);
+  const normalizedLicensePlate = normalizePlate(values.license_plate);
+
+  // El servicio debe existir de verdad (un UUID inventado pasa el formato).
+  const [existingService] = await db
+    .select({ id: services.id })
+    .from(services)
+    .where(eq(services.id, values.service))
+    .limit(1);
+  if (!existingService) {
+    return {
+      success: false,
+      message: "Revisa los campos indicados.",
+      errors: { service: ["El servicio seleccionado no existe."] },
+    };
+  }
+
+  // Reglas de calendario en hora de Logroño: futuro, laborable, turnos,
+  // rejilla de 45 min y antelación máxima. El DatePicker ya lo limita en la
+  // UI, pero un POST directo no pasaría por él.
+  const slotError = validateSlot(
+    values.appointment_start,
+    values.appointment_end,
+  );
+  if (slotError) {
+    return {
+      success: false,
+      message: "Revisa los campos indicados.",
+      errors: { [slotError.field]: [slotError.message] },
+    };
+  }
 
   try {
     await db.transaction(async (tx) => {
+      const appointmentStart = values.appointment_start;
+      const appointmentEnd = values.appointment_end;
+
+      // Candado por hueco: dos reservas concurrentes del mismo slot se
+      // serializan aquí; la segunda verá el conflicto y recibirá un error
+      // amable en lugar de duplicar la cita. Huecos distintos no se bloquean.
+      await tx.execute(
+        sql`SELECT pg_advisory_xact_lock(hashtext(${`appt:${appointmentStart.toISOString()}`})::bigint)`,
+      );
+
+      const conflictingAppointments = await tx
+        .select({ id: appointments.id })
+        .from(appointments)
+        .where(
+          and(
+            lt(appointments.fechaInicio, appointmentEnd),
+            gt(appointments.fechaFin, appointmentStart),
+            // Las canceladas liberan el hueco.
+            ne(appointments.status, "CANCELLED"),
+          ),
+        )
+        .limit(1);
+
+      if (conflictingAppointments.length > 0) {
+        throw new Error(SLOT_CONFLICT_MESSAGE);
+      }
+
       const [insertedUser] = await tx
         .insert(users)
         .values({
           fullName: values.full_name,
           email: normalizedEmail,
-          phone: values.phone,
+          phone: normalizedPhone,
         })
         .onConflictDoNothing()
         .returning({ id: users.id });
-      const [user] = insertedUser
-        ? [insertedUser]
-        : await tx
-            .select({ id: users.id })
-            .from(users)
-            .where(sql`lower(${users.email}) = ${normalizedEmail}`)
-            .limit(1);
+      let userId = insertedUser?.id;
+      if (!userId) {
+        const [user] = await tx
+          .select({ id: users.id })
+          .from(users)
+          .where(sql`lower(${users.email}) = ${normalizedEmail}`)
+          .limit(1);
+        if (!user) {
+          throw new Error("No se pudo guardar el usuario.");
+        }
+        userId = user.id;
+        // Refresca los datos si el cliente ya existía (nuevo teléfono, etc.).
+        await tx
+          .update(users)
+          .set({ fullName: values.full_name, phone: normalizedPhone })
+          .where(eq(users.id, userId));
+      }
 
       const [insertedVehicle] = await tx
         .insert(vehicles)
@@ -102,33 +156,31 @@ export async function processAppointmentForm(
           brand: values.brand,
           model: values.model,
           year: values.year,
-          vin: values.vin || undefined,
+          vin: normalizeVin(values.vin),
         })
         .onConflictDoNothing({ target: vehicles.licensePlate })
         .returning({ id: vehicles.id });
-      const [vehicle] = insertedVehicle
-        ? [insertedVehicle]
-        : await tx
-            .select({ id: vehicles.id })
-            .from(vehicles)
-            .where(eq(vehicles.licensePlate, normalizedLicensePlate))
-            .limit(1);
-
-      const appointmentStart = values.appointment_start;
-      const appointmentEnd = values.appointment_end;
-      const conflictingAppointments = await tx
-        .select({ id: appointments.id })
-        .from(appointments)
-        .where(
-          and(
-            lt(appointments.fechaInicio, appointmentEnd),
-            gt(appointments.fechaFin, appointmentStart),
-          ),
-        )
-        .limit(1);
-
-      if (conflictingAppointments.length > 0) {
-        throw new Error("El horario seleccionado ya no está disponible.");
+      let vehicleId = insertedVehicle?.id;
+      if (!vehicleId) {
+        const [vehicle] = await tx
+          .select({ id: vehicles.id })
+          .from(vehicles)
+          .where(eq(vehicles.licensePlate, normalizedLicensePlate))
+          .limit(1);
+        if (!vehicle) {
+          throw new Error("No se pudo guardar el vehículo.");
+        }
+        vehicleId = vehicle.id;
+        // Refresca los datos si la matrícula ya existía.
+        await tx
+          .update(vehicles)
+          .set({
+            brand: values.brand,
+            model: values.model,
+            year: values.year,
+            vin: normalizeVin(values.vin),
+          })
+          .where(eq(vehicles.id, vehicleId));
       }
 
       await tx.insert(appointments).values({
@@ -136,20 +188,18 @@ export async function processAppointmentForm(
         fechaInicio: appointmentStart,
         notes: values.notes || undefined,
         service: values.service,
-        user: user.id,
-        vehicle: vehicle.id,
+        user: userId,
+        vehicle: vehicleId,
       });
     });
   } catch (error) {
-    if (
-      error instanceof Error &&
-      error.message === "El horario seleccionado ya no está disponible."
-    ) {
+    if (error instanceof Error && error.message === SLOT_CONFLICT_MESSAGE) {
       return {
         success: false,
         message: error.message,
       };
     }
+    console.error("Error al procesar la reserva:", error);
     return {
       success: false,
       message: "No se pudo enviar la solicitud. Inténtalo de nuevo.",
@@ -169,65 +219,41 @@ export async function processAppointmentForm(
 
 type AppointmentProp = typeof appointments.$inferSelect;
 
+/**
+ * Huecos libres de un día ("YYYY-MM-DD" en hora de Logroño).
+ * Turnos 9:00–13:30 y 16:00–19:30 en rejilla de 45 min; fines de semana
+ * y días pasados devuelven []. Las citas CANCELLED no ocupan hueco.
+ */
 export async function getAvailableSlotsForDate(
   dateValue: string,
   existingAppointments?: AppointmentProp[],
 ) {
-  let appointmentsForDate = existingAppointments;
+  if (!parseDateKey(dateValue)) {
+    return [];
+  }
 
-  if (!existingAppointments) {
-    const start = new Date(`${dateValue}T00:00:00.000Z`);
-    const end = new Date(`${dateValue}T23:59:59.999Z`);
+  let appointmentsForDate: BusyInterval[];
+  if (existingAppointments) {
+    appointmentsForDate = existingAppointments.filter(
+      (appointment) => appointment.status !== "CANCELLED",
+    );
+  } else {
+    const range = madridDayRangeUtc(dateValue);
+    if (!range) {
+      return [];
+    }
 
     appointmentsForDate = await db
       .select()
       .from(appointments)
       .where(
         and(
-          lt(appointments.fechaInicio, end),
-          gt(appointments.fechaFin, start),
+          lt(appointments.fechaInicio, range.end),
+          gt(appointments.fechaFin, range.start),
+          ne(appointments.status, "CANCELLED"),
         ),
       );
   }
 
-  const slots: { value: string; endValue: string; label: string }[] = [];
-  const firstSlot = new Date(
-    `${dateValue}T${String(OPENING_HOUR).padStart(2, "0")}:00:00.000Z`,
-  );
-  const closingTime = new Date(
-    `${dateValue}T${String(CLOSING_HOUR).padStart(2, "0")}:00:00.000Z`,
-  );
-
-  for (
-    let slotStart = firstSlot;
-    slotStart < closingTime;
-    slotStart = new Date(slotStart.getTime() + SLOT_DURATION_MINUTES * 60_000)
-  ) {
-    const slotEnd = new Date(
-      slotStart.getTime() + SLOT_DURATION_MINUTES * 60_000,
-    );
-
-    if (slotEnd > closingTime) {
-      break;
-    }
-
-    const isOccupied = appointmentsForDate?.some(
-      (appointment) =>
-        appointment.fechaInicio < slotEnd && appointment.fechaFin > slotStart,
-    );
-
-    if (!isOccupied) {
-      slots.push({
-        value: slotStart.toISOString(),
-        endValue: slotEnd.toISOString(),
-        label: slotStart.toLocaleTimeString("es-ES", {
-          hour: "2-digit",
-          minute: "2-digit",
-          timeZone: "UTC",
-        }),
-      });
-    }
-  }
-
-  return slots;
+  return generateSlots(dateValue, new Date(), appointmentsForDate);
 }
