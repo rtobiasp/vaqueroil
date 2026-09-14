@@ -1,12 +1,19 @@
 import { db } from "@/src/db";
 import { appointments, services, users, vehicles } from "@/src/db/schema";
 import { asc, eq, getTableColumns } from "drizzle-orm";
+import { unstable_cache } from "next/cache";
+
+// Tag compartido para invalidar el dashboard cuando cambien los appointments.
+// En Server Actions: `updateTag(APPOINTMENTS_CACHE_TAG)`.
+// Fuera de ellas (Route Handlers): `revalidateTag(APPOINTMENTS_CACHE_TAG, "max")`.
+export const APPOINTMENTS_CACHE_TAG = "appointments";
 
 // ---------------------------------------------------------------------------
 // 1. Única lectura a BBDD: todos los appointments con sus relaciones.
+//    Cacheada entre visitas; solo se recarga con `revalidateTag` o `revalidate`.
 // ---------------------------------------------------------------------------
 
-export const getAllAppointments = async () => {
+async function fetchAllAppointmentsFromDb() {
   return db
     .select({
       ...getTableColumns(appointments),
@@ -22,7 +29,32 @@ export const getAllAppointments = async () => {
     .leftJoin(services, eq(appointments.service, services.id))
     .leftJoin(vehicles, eq(appointments.vehicle, vehicles.id))
     .orderBy(asc(appointments.fechaInicio));
-};
+}
+
+const getCachedAppointmentsRaw = unstable_cache(
+  fetchAllAppointmentsFromDb,
+  ["dashboard-all-appointments"],
+  {
+    tags: [APPOINTMENTS_CACHE_TAG],
+    // Sin `revalidate`: caché indefinida hasta invalidación manual.
+    // Pon p. ej. `revalidate: 300` como red de seguridad (5 min).
+  },
+);
+
+export async function getAllAppointments() {
+  const rows = await getCachedAppointmentsRaw();
+  // `unstable_cache` serializa el resultado: las fechas pueden volver
+  // como string. Rehidratar a Date para que el dashboard siga funcionando.
+  return rows.map((cita) => ({
+    ...cita,
+    fechaInicio:
+      cita.fechaInicio instanceof Date
+        ? cita.fechaInicio
+        : new Date(cita.fechaInicio),
+    fechaFin:
+      cita.fechaFin instanceof Date ? cita.fechaFin : new Date(cita.fechaFin),
+  }));
+}
 
 export type CitaConDetalles = Awaited<
   ReturnType<typeof getAllAppointments>

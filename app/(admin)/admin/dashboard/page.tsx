@@ -24,6 +24,8 @@ import {
 } from "./actions";
 import { getAvailableSlotsForDate } from "@/app/(public)/request-appointment-quote/actions";
 
+// force-dynamic: la página se renderiza en cada visita (para `new Date()` actual),
+// pero `getAllAppointments()` sigue servida desde Data Cache hasta `revalidateTag`.
 export const dynamic = "force-dynamic";
 
 function formatearHora(fecha: Date) {

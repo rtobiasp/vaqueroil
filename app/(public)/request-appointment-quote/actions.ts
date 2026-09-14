@@ -3,6 +3,8 @@
 import { db } from "@/src/db";
 import { appointments, users, vehicles } from "@/src/db/schema";
 import { and, eq, gt, lt, sql } from "drizzle-orm";
+import { updateTag } from "next/cache";
+import { APPOINTMENTS_CACHE_TAG } from "@/app/(admin)/admin/dashboard/actions";
 import { z } from "zod";
 
 const SLOT_DURATION_MINUTES = 45;
@@ -153,6 +155,11 @@ export async function processAppointmentForm(
       message: "No se pudo enviar la solicitud. Inténtalo de nuevo.",
     };
   }
+
+  // Nueva cita creada: invalidar el caché del dashboard para no ver datos antiguos.
+  // `updateTag` = invalidación inmediata dentro de una Server Action (Next 16).
+  // Fuera de una Server Action (Route Handler, etc.) usa `revalidateTag(TAG, "max")`.
+  updateTag(APPOINTMENTS_CACHE_TAG);
 
   return {
     success: true,
