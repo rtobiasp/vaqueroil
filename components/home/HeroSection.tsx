@@ -16,7 +16,7 @@ export default function HeroSection() {
 
       <div className="relative z-10 flex w-full flex-1 flex-col justify-between gap-8 px-5 pt-36 pb-12 text-text-inverse sm:px-8 md:px-15 md:pt-60">
         <div className="max-w-full sm:max-w-[80%]">
-          <h1 className="font-body text-4xl tracking-tighter leading sm:text-5xl md:text-[112px]">
+          <h1 className="font-body text-6xl leading-none tracking-tighter text-balance sm:text-7xl md:text-[112px] md:leading-[0.95]">
             Tu vehículo, en las mejores manos.
           </h1>
         </div>

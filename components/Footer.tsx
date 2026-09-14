@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Clock, MapPin, Navigation, Phone } from "lucide-react";
+import { Phone } from "lucide-react";
 import BrandButton from "./ui/BrandButton";
 
 const exploreLinks = [
@@ -10,18 +10,13 @@ const exploreLinks = [
   { label: "Contacto", href: "/contact" },
 ];
 
-const horario = [
-  { dias: "Lunes — Viernes", horas: "9:00–13:30 · 16:00–19:30" },
-  { dias: "Sábado — Domingo", horas: "Cerrado" },
-];
-
 export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
     <footer className="bg-bg-dark bg-felt text-text-inverse">
       <div className="mx-auto w-full max-w-7xl px-5 py-12 sm:px-8 sm:py-14 md:px-15 md:py-20">
-        <div className="grid grid-cols-1 gap-10 sm:gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_0.7fr_1.1fr] lg:gap-10">
+        <div className="grid grid-cols-1 gap-10 sm:gap-12 md:grid-cols-2 lg:gap-10">
           {/* Marca */}
           <div className="flex flex-col items-start gap-5">
             <Link href="/" aria-label="Vaqueroil - inicio">
@@ -67,48 +62,6 @@ export default function Footer() {
               ))}
             </ul>
           </nav>
-
-          {/* Contacto */}
-          <div className="rounded-2xl bg-surface-mid p-5 sm:p-6">
-            <h2 className="font-link text-sm uppercase tracking-widest text-accent-primary">
-              Contacto
-            </h2>
-            <address className="mt-5 flex items-start gap-3 text-sm leading-relaxed text-text-inverse/80 not-italic">
-              <MapPin
-                size={18}
-                aria-hidden="true"
-                className="mt-0.5 shrink-0 text-accent-primary"
-              />
-              C. Calahorra, 12, Pab. 1, 26006 Logroño, La Rioja
-            </address>
-            <div className="mt-4 flex items-center gap-2 border-t border-text-inverse/10 pt-4 text-sm">
-              <Clock
-                size={16}
-                aria-hidden="true"
-                className="shrink-0 text-accent-primary"
-              />
-              <span className="text-text-inverse/80">
-                Lun–Vie · 9:00–13:30 · 16:00–19:30
-              </span>
-            </div>
-            <dl className="sr-only">
-              {horario.map(({ dias, horas }) => (
-                <div key={dias}>
-                  <dt>{dias}</dt>
-                  <dd>{horas}</dd>
-                </div>
-              ))}
-            </dl>
-            <a
-              href="https://www.google.com/maps/dir/?api=1&destination=Vaqueroil+C.+Calahorra+12+26006+Logro%C3%B1o"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-5 flex items-center justify-center gap-2 rounded-lg border border-text-inverse/25 px-4 py-2.5 text-sm font-medium uppercase transition hover:bg-text-inverse/10"
-            >
-              <Navigation size={16} aria-hidden="true" />
-              Cómo llegar
-            </a>
-          </div>
         </div>
       </div>
 
