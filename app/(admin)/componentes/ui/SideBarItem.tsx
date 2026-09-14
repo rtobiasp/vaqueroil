@@ -9,6 +9,7 @@ type SideBarItemProps = {
   label: string;
   icon: LucideIcon;
   collapsed?: boolean;
+  onNavigate?: () => void;
 };
 
 export default function SideBarItem({
@@ -16,6 +17,7 @@ export default function SideBarItem({
   label,
   icon: Icon,
   collapsed = false,
+  onNavigate,
 }: SideBarItemProps) {
   const pathname = usePathname();
   const active = pathname === href || pathname.startsWith(`${href}/`);
@@ -24,6 +26,7 @@ export default function SideBarItem({
     <li>
       <Link
         href={href}
+        onClick={onNavigate}
         aria-current={active ? "page" : undefined}
         title={collapsed ? label : undefined}
         className={`flex flex-row gap-2 items-center rounded-xl px-3 py-2 transition-colors duration-200 overflow-hidden whitespace-nowrap ${
