@@ -31,7 +31,20 @@ export async function updateSession(request: NextRequest) {
 
   // Refresca la sesión si está caducada. Necesario para que
   // getClaims() funcione en /oauth/consent tras el login.
-  await supabase.auth.getClaims();
+  const { data } = await supabase.auth.getClaims();
+  const user = data?.claims;
+
+  // Protege todo el apartado /admin/*: sin sesión -> /login
+  // conservando la URL original en ?redirect= para volver tras el login.
+  if (!user && request.nextUrl.pathname.startsWith("/admin")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    url.searchParams.set(
+      "redirect",
+      request.nextUrl.pathname + request.nextUrl.search,
+    );
+    return NextResponse.redirect(url);
+  }
 
   return supabaseResponse;
 }
