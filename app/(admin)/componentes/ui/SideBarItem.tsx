@@ -31,11 +31,11 @@ export default function SideBarItem({
         title={collapsed ? label : undefined}
         className={`flex flex-row gap-2 items-center rounded-xl px-3 py-2 transition-colors duration-200 overflow-hidden whitespace-nowrap ${
           active
-            ? "bg-accent-primary text-text-inverse hover:bg-accent-primary-hover"
+            ? "bg-accent-primary text-bg-dark hover:bg-accent-primary-hover hover:text-text-inverse"
             : "hover:bg-surface-mid hover:text-text-inverse"
         } ${collapsed ? "justify-center" : ""}`}
       >
-        <Icon className="shrink-0" />
+        <Icon className="shrink-0" aria-hidden="true" />
         <span
           className={`transition-all duration-300 overflow-hidden whitespace-nowrap ${collapsed ? "hidden" : ""}`}
         >

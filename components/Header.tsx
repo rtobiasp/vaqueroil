@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import logo_img from "@/public/logo.png";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { gsap, useGSAP, isReducedMotion } from "@/lib/gsap";
@@ -12,11 +13,15 @@ const links = [
   { label: "CONTACTO", href: "/contact" },
   { label: "SOBRE NOSOTROS", href: "/about-us" },
 ];
+const CTA_HREF = "/request-appointment-quote";
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLElement>(null);
+  const pathname = usePathname();
+  const isActive = (href: string) =>
+    pathname === href || pathname.startsWith(`${href}/`);
 
   useGSAP(
     () => {
@@ -45,6 +50,16 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Cierra el menú móvil con Escape (WCAG 2.1.1 / 3.2.1)
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
+
   return (
     <header
       ref={root}
@@ -70,7 +85,8 @@ export default function Header() {
             <li key={link.label}>
               <Link
                 href={link.href}
-                className="flex h-full items-center justify-between rounded-xl px-6 py-1 transition-colors duration-200 hover:bg-accent-primary hover:text-text-inverse"
+                aria-current={isActive(link.href) ? "page" : undefined}
+                className="flex h-full items-center justify-between rounded-xl px-6 py-1 transition-colors duration-200 hover:bg-accent-primary hover:text-bg-dark"
               >
                 {link.label}
               </Link>
@@ -78,8 +94,9 @@ export default function Header() {
           ))}
           <li>
             <Link
-              href="/request-appointment-quote"
-              className="flex h-full items-center justify-between rounded-xl bg-bg-dark px-6 py-1 text-text-inverse transition-colors duration-200 hover:bg-accent-primary"
+              href={CTA_HREF}
+              aria-current={isActive(CTA_HREF) ? "page" : undefined}
+              className="flex h-full items-center justify-between rounded-xl bg-bg-dark px-6 py-1 text-text-inverse transition-colors duration-200 hover:bg-accent-primary hover:text-bg-dark"
             >
               RESERVAR
             </Link>
@@ -91,6 +108,7 @@ export default function Header() {
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
+        aria-controls="menu-movil"
         aria-label={open ? "Cerrar menú" : "Abrir menú"}
         className="flex h-11 w-11 items-center justify-center rounded-xl bg-bg-light text-text-main motion-safe:transition-transform motion-safe:active:scale-95 lg:hidden"
       >
@@ -115,8 +133,10 @@ export default function Header() {
       </button>
       {/* Mobile nav */}
       <nav
+        id="menu-movil"
         aria-label="Navegación móvil"
         aria-hidden={!open}
+        inert={!open}
         className={`absolute inset-x-4 top-full mt-2 origin-top overflow-hidden rounded-2xl bg-bg-light text-text-main shadow-xl motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out lg:hidden ${
           open
             ? "visible max-h-105 scale-100 translate-y-0 opacity-100"
@@ -136,7 +156,8 @@ export default function Header() {
                 href={link.href}
                 onClick={() => setOpen(false)}
                 tabIndex={open ? undefined : -1}
-                className="block rounded-xl px-4 py-3 text-sm font-medium transition-colors hover:bg-accent-primary hover:text-text-inverse"
+                aria-current={isActive(link.href) ? "page" : undefined}
+                className="block rounded-xl px-4 py-3 text-sm font-medium transition-colors hover:bg-accent-primary hover:text-bg-dark"
               >
                 {link.label}
               </Link>
@@ -154,7 +175,8 @@ export default function Header() {
               href="/request-appointment-quote"
               onClick={() => setOpen(false)}
               tabIndex={open ? undefined : -1}
-              className="block rounded-xl bg-bg-dark px-4 py-3 text-center text-sm font-medium text-text-inverse transition-colors hover:bg-accent-primary"
+              aria-current={isActive(CTA_HREF) ? "page" : undefined}
+              className="block rounded-xl bg-bg-dark px-4 py-3 text-center text-sm font-medium text-text-inverse transition-colors hover:bg-accent-primary hover:text-bg-dark"
             >
               RESERVAR
             </Link>

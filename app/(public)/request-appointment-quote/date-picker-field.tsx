@@ -12,7 +12,7 @@ export function DatePickerField({ onDateChange, value }: DatePickerFieldProps) {
         htmlFor="date-trigger"
         className="text-sm font-medium text-text-inverse/90"
       >
-        Fecha <span className="text-accent-primary">*</span>
+        Fecha <span aria-hidden="true" className="text-accent-ink">*</span>
       </label>
       <DatePicker onDateChange={onDateChange} value={value} />
       <p className="text-xs text-text-inverse/50">

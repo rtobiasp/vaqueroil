@@ -139,7 +139,7 @@ export default async function Dashboard() {
           </p>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row">
-          <span className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-accent-primary px-4 py-2 text-sm font-medium text-white sm:w-auto">
+          <span className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-accent-primary px-4 py-2 text-sm font-medium text-bg-dark hover:bg-accent-primary-hover hover:text-text-inverse sm:w-auto">
             <Plus size={16} /> Nueva cita
           </span>
           <span className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-white/15 bg-white px-4 py-2 text-sm font-medium text-text-main sm:w-auto">
@@ -159,7 +159,7 @@ export default async function Dashboard() {
               <p className="min-w-0 truncate text-sm font-medium text-text-main/60">
                 {item.titulo}
               </p>
-              <item.icono size={20} className="shrink-0 text-accent-primary" />
+              <item.icono size={20} aria-hidden="true" className="shrink-0 text-accent-primary" />
             </div>
             <p className="mt-2 text-2xl font-bold sm:text-3xl">{item.valor}</p>
           </div>

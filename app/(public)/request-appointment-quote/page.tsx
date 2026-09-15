@@ -31,7 +31,7 @@ export default async function RequestAppointmentQuotePage() {
     .from(services);
 
   return (
-    <main>
+    <main id="contenido" tabIndex={-1}>
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Inicio", url: absoluteUrl("/") },
@@ -101,20 +101,20 @@ export default async function RequestAppointmentQuotePage() {
                 </p>
               </div>
 
-              <div className="rounded-2xl bg-accent-primary p-6 text-text-inverse sm:p-7">
+              <div className="rounded-2xl bg-accent-primary p-6 text-bg-dark sm:p-7">
                 <h2 className="text-lg font-medium">¿Prefieres llamar?</h2>
-                <p className="mt-2 text-sm leading-relaxed text-text-inverse/90">
+                <p className="mt-2 text-sm leading-relaxed">
                   Para urgencias o dudas, te atendemos en horario de taller.
                 </p>
                 <div className="mt-4 flex flex-col gap-2.5">
                   <a
                     href="tel:+34941047695"
-                    className="flex items-center justify-center gap-2 rounded-lg bg-bg-dark px-4 py-3 text-sm font-medium uppercase transition hover:bg-surface-mid"
+                    className="flex items-center justify-center gap-2 rounded-lg bg-bg-dark px-4 py-3 text-sm font-medium text-text-inverse uppercase transition hover:bg-surface-mid"
                   >
                     <Phone size={16} aria-hidden="true" />
                     941 04 76 95
                   </a>
-                  <p className="flex items-center justify-center gap-1.5 text-xs text-text-inverse/85">
+                  <p className="flex items-center justify-center gap-1.5 text-xs">
                     <MapPin size={14} aria-hidden="true" />
                     C. Calahorra 12, Logroño
                   </p>

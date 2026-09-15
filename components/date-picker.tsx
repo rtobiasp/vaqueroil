@@ -47,9 +47,10 @@ export default function DatePicker({ onDateChange, value }: DatePickerProps) {
           <Button
             variant="outline"
             type="button"
+            id="date-trigger"
             className={cn(
               "flex h-auto w-full items-center justify-start gap-2.5 rounded-xl border border-white/10 bg-bg-dark/60 px-4 py-3 text-left text-sm font-normal text-text-inverse transition-colors hover:border-accent-primary hover:bg-bg-dark hover:text-text-inverse sm:text-base",
-              !date && "text-text-inverse/40",
+              !date && "text-text-inverse/60",
             )}
           />
         }

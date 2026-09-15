@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function LegalPage() {
   return (
-    <main>
+    <main id="contenido" tabIndex={-1}>
       <HeroLanding
         bg_image="/hero_background.jpg"
         title="AVISO LEGAL"

@@ -28,7 +28,7 @@ export function SummaryCards({ resumen }: { resumen: ResumenCoches }) {
             <p className="min-w-0 truncate text-sm font-medium text-text-main/60">
               {item.titulo}
             </p>
-            <item.icono size={20} className="shrink-0 text-accent-primary" />
+            <item.icono size={20} aria-hidden="true" className="shrink-0 text-accent-primary" />
           </div>
           <p className="mt-2 text-2xl font-bold sm:text-3xl">{item.valor}</p>
         </div>

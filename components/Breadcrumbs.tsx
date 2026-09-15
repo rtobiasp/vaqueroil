@@ -34,7 +34,7 @@ export default function Breadcrumbs() {
         <li className="shrink-0">
           <Link
             href="/"
-            className="rounded-full transition-colors hover:text-white"
+            className="inline-block rounded-full px-2 py-1 transition-colors hover:text-white"
           >
             Inicio
           </Link>
@@ -70,7 +70,7 @@ export default function Breadcrumbs() {
                 ) : (
                   <Link
                     href={href}
-                    className="rounded-full transition-colors hover:text-white"
+                    className="inline-block rounded-full px-2 py-1 transition-colors hover:text-white"
                   >
                     {formattedName}
                   </Link>

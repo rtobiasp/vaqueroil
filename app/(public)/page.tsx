@@ -30,7 +30,7 @@ export default async function Home() {
   const serviceList = (await db.select().from(services)) || [];
 
   return (
-    <main>
+    <main id="contenido" tabIndex={-1}>
       <JsonLd
         data={breadcrumbJsonLd([{ name: "Inicio", url: absoluteUrl("/") }])}
       />

@@ -56,7 +56,7 @@ export function CarCreateDialog({
           </button>
           <button
             type="submit"
-            className="rounded-md bg-accent-primary px-4 py-2 text-sm font-medium text-white hover:bg-accent-primary-hover"
+            className="rounded-md bg-accent-primary px-4 py-2 text-sm font-medium text-bg-dark hover:bg-accent-primary-hover hover:text-text-inverse"
           >
             Crear
           </button>

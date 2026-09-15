@@ -14,12 +14,12 @@ export default function UbicacionSection() {
       className="grid grid-cols-1 items-stretch bg-bg-dark lg:grid-cols-2"
     >
       {/* Panel info */}
-      <div className="flex flex-col justify-center gap-5 bg-accent-primary px-5 py-10 text-text-inverse sm:px-8 md:px-10 md:py-8 lg:px-12 lg:py-10">
+      <div className="flex flex-col justify-center gap-5 bg-accent-primary px-5 py-10 text-bg-dark sm:px-8 md:px-10 md:py-8 lg:px-12 lg:py-10">
         <Reveal>
           <h2 className="text-2xl font-medium uppercase leading-none sm:text-3xl md:text-4xl">
             Dónde estamos
           </h2>
-          <p className="mt-2 max-w-md text-sm leading-relaxed text-text-inverse/90 sm:text-base">
+          <p className="mt-2 max-w-md text-sm leading-relaxed sm:text-base">
             Te esperamos en nuestro taller. Pásate sin compromiso o llámanos y
             te asesoramos.
           </p>
@@ -30,7 +30,7 @@ export default function UbicacionSection() {
             data-stagger
             className="flex items-start gap-3 text-sm not-italic leading-relaxed sm:items-center sm:text-base"
           >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-text-inverse/15">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-bg-dark/15">
               <MapPin size={18} aria-hidden="true" />
             </span>
             <span>C. Calahorra, 12, Pab. 1, 26006 Logroño, La Rioja</span>
@@ -42,7 +42,7 @@ export default function UbicacionSection() {
           >
             <a
               href="tel:+34941047695"
-              className="flex items-center justify-center gap-2 rounded-lg bg-text-inverse px-4 py-2.5 font-medium text-accent-primary transition hover:bg-bg-dark hover:text-text-inverse sm:w-auto"
+              className="flex items-center justify-center gap-2 rounded-lg bg-text-inverse px-4 py-2.5 font-medium text-accent-primary-hover transition hover:bg-bg-dark hover:text-text-inverse sm:w-auto"
             >
               <Phone size={18} aria-hidden="true" />
               941 04 76 95
@@ -51,7 +51,7 @@ export default function UbicacionSection() {
               href="https://www.google.com/maps/dir/?api=1&destination=Vaqueroil+C.+Calahorra+12+26006+Logro%C3%B1o"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 rounded-lg border border-text-inverse/40 px-4 py-2.5 text-sm font-medium uppercase transition hover:bg-text-inverse/10"
+              className="flex items-center justify-center gap-2 rounded-lg border border-bg-dark/40 px-4 py-2.5 text-sm font-medium uppercase transition hover:bg-bg-dark/10"
             >
               <Navigation size={18} aria-hidden="true" />
               Cómo llegar
@@ -60,9 +60,9 @@ export default function UbicacionSection() {
 
           <div
             data-stagger
-            className="mt-5 border-t border-text-inverse/25 pt-4"
+            className="mt-5 border-t border-bg-dark/25 pt-4"
           >
-            <h3 className="flex items-center gap-2 text-sm font-medium uppercase tracking-widest text-text-inverse/80">
+            <h3 className="flex items-center gap-2 text-sm font-medium uppercase tracking-widest">
               <Clock size={16} aria-hidden="true" />
               Horario
             </h3>
@@ -70,13 +70,13 @@ export default function UbicacionSection() {
               {horario.map(({ dias, horas }) => (
                 <div
                   key={dias}
-                  className="flex items-center justify-between gap-6 border-b border-text-inverse/15 py-2 last:border-0"
+                  className="flex items-center justify-between gap-6 border-b border-bg-dark/15 py-2 last:border-0"
                 >
                   <dt>{dias}</dt>
                   <dd
                     className={
                       horas === "Cerrado"
-                        ? "rounded-full bg-bg-dark/25 px-3 py-0.5 text-sm uppercase tracking-wide"
+                        ? "rounded-full bg-bg-dark px-3 py-0.5 text-sm uppercase tracking-wide text-text-inverse"
                         : "font-medium tabular-nums"
                     }
                   >

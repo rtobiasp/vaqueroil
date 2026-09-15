@@ -58,12 +58,12 @@ export default function Footer() {
                 Explorar
               </h2>
               <StaggerGroup stagger={0.06} y={14}>
-                <ul className="mt-5 flex flex-col gap-3">
+                <ul className="mt-5 flex flex-col gap-1">
                   {exploreLinks.map(({ label, href }) => (
                     <li key={href + label} data-stagger>
                       <Link
                         href={href}
-                        className="text-text-inverse/75 transition-colors hover:text-accent-primary"
+                        className="inline-block py-1 text-text-inverse/75 transition-colors hover:text-accent-primary"
                       >
                         {label}
                       </Link>

@@ -38,6 +38,8 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
             required
             placeholder="tu@email.com"
             disabled={isPending}
+            aria-invalid={state.error ? true : undefined}
+            aria-describedby={state.error ? "login-error" : undefined}
             className={inputClass}
           />
         </div>
@@ -62,6 +64,8 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
             required
             placeholder="••••••••"
             disabled={isPending}
+            aria-invalid={state.error ? true : undefined}
+            aria-describedby={state.error ? "login-error" : undefined}
             className={`${inputClass} pr-11`}
           />
           <button
@@ -69,7 +73,7 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
             onClick={() => setShowPassword((v) => !v)}
             disabled={isPending}
             aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
-            className="absolute top-1/2 right-2.5 -translate-y-1/2 rounded-md p-1.5 text-text-main/50 transition-colors hover:bg-text-main/5 hover:text-text-main disabled:opacity-50"
+            className="absolute top-1/2 right-2 -translate-y-1/2 rounded-md p-2 text-text-main/50 transition-colors hover:bg-text-main/5 hover:text-text-main disabled:opacity-50"
           >
             {showPassword ? (
               <EyeOff className="size-4" aria-hidden="true" />
@@ -82,6 +86,7 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
       {state.error ? (
         <p
           role="alert"
+          id="login-error"
           className="flex items-start gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2.5 text-sm text-red-700"
         >
           <TriangleAlert
@@ -94,7 +99,7 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
       <button
         type="submit"
         disabled={isPending}
-        className="mt-1 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-accent-primary text-sm font-semibold tracking-wider text-text-inverse uppercase transition-colors duration-200 hover:bg-accent-primary-hover disabled:cursor-not-allowed disabled:opacity-70"
+        className="mt-1 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-accent-primary text-sm font-semibold tracking-wider text-bg-dark uppercase transition-colors duration-200 hover:bg-accent-primary-hover hover:text-text-inverse disabled:cursor-not-allowed disabled:opacity-70"
       >
         {isPending ? (
           <>

@@ -5,6 +5,24 @@ import { ShieldCheck, Clock, BadgeCheck } from "lucide-react";
 import Reveal from "@/components/animations/Reveal";
 import StaggerGroup from "@/components/animations/StaggerGroup";
 
+const ventajas = [
+  {
+    icon: ShieldCheck,
+    title: "Precio claro",
+    description: "Te decimos lo que cuesta antes de empezar.",
+  },
+  {
+    icon: Clock,
+    title: "Te decimos cuándo está",
+    description: "Y si algo se retrasa, te avisamos.",
+  },
+  {
+    icon: BadgeCheck,
+    title: "Trabajo garantizado",
+    description: "Si algo de lo que hemos tocado falla, lo miramos.",
+  },
+];
+
 export default function VentajasSection() {
   return (
     <section className="flex min-h-[80vh] items-center justify-center bg-felt bg-bg-dark px-5 py-12 sm:px-8 sm:py-16 md:px-15 md:py-20">
@@ -34,46 +52,21 @@ export default function VentajasSection() {
               itemSelector="[data-ventaja]"
               stagger={0.1}
             >
-              <div data-ventaja className="flex items-start gap-3 sm:gap-4">
-                <ShieldCheck
-                  className="mt-1 shrink-0 text-accent-primary"
-                  size={28}
-                />
-                <div>
-                  <p className="text-lg font-medium sm:text-xl">Precio claro</p>
-                  <p className="text-sm text-text-inverse/70 sm:text-base">
-                    Te decimos lo que cuesta antes de empezar.
-                  </p>
+              {ventajas.map(({ icon: Icon, title, description }) => (
+                <div data-ventaja key={title} className="flex items-start gap-3 sm:gap-4">
+                  <Icon
+                    aria-hidden="true"
+                    className="mt-1 shrink-0 text-accent-primary"
+                    size={28}
+                  />
+                  <div>
+                    <h3 className="text-lg font-medium sm:text-xl">{title}</h3>
+                    <p className="text-sm text-text-inverse/70 sm:text-base">
+                      {description}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div data-ventaja className="flex items-start gap-3 sm:gap-4">
-                <Clock
-                  className="mt-1 shrink-0 text-accent-primary"
-                  size={28}
-                />
-                <div>
-                  <p className="text-lg font-medium sm:text-xl">
-                    Te decimos cuándo está
-                  </p>
-                  <p className="text-sm text-text-inverse/70 sm:text-base">
-                    Y si algo se retrasa, te avisamos.
-                  </p>
-                </div>
-              </div>
-              <div data-ventaja className="flex items-start gap-3 sm:gap-4">
-                <BadgeCheck
-                  className="mt-1 shrink-0 text-accent-primary"
-                  size={28}
-                />
-                <div>
-                  <p className="text-lg font-medium sm:text-xl">
-                    Trabajo garantizado
-                  </p>
-                  <p className="text-sm text-text-inverse/70 sm:text-base">
-                    Si algo de lo que hemos tocado falla, lo miramos.
-                  </p>
-                </div>
-              </div>
+              ))}
             </StaggerGroup>
             <div className="mt-8 w-full sm:mt-10 sm:w-fit [&>a]:w-full sm:[&>a]:w-auto [&>a]:justify-center">
               <BrandButton link="/services" text="Ver servicios" />

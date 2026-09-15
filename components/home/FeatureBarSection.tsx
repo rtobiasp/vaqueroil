@@ -4,6 +4,7 @@ import StaggerGroup from "@/components/animations/StaggerGroup";
 export default function FeatureBarSection() {
   return (
     <section className="grid w-full grid-cols-1 gap-y-8 bg-felt bg-surface-mid px-5 py-10 text-text-inverse sm:grid-cols-2 sm:px-8 lg:min-h-[25vh] lg:grid-cols-4 lg:px-16 lg:py-8">
+      <h2 className="sr-only">Qué hacemos en el taller</h2>
       <StaggerGroup className="contents" stagger={0.1}>
         <div
           data-stagger

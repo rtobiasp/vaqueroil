@@ -4,7 +4,7 @@ import { services } from "@/src/db/schema";
 import ServiceCard from "./ui/ServiceCard";
 import { Cog, ArrowLeft, ArrowRight } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+import { A11y, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import { useState } from "react";
@@ -35,7 +35,7 @@ export default function ServicesSection({ services }: ServicesSectionProps) {
           slidesPerView={1}
           centeredSlides={true}
           loop={true}
-          modules={[Navigation]}
+          modules={[A11y, Navigation]}
           navigation={{ prevEl, nextEl }}
           breakpoints={{
             640: { slidesPerView: 1.5, spaceBetween: 20 },

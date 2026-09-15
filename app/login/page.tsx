@@ -45,7 +45,10 @@ export default async function LoginPage({
   const isAdminAccess = redirectTo.startsWith("/admin");
 
   return (
-    <div className="relative flex min-h-svh items-center justify-center overflow-hidden bg-bg-dark px-4 py-12">
+    <main
+      id="contenido"
+      className="relative flex min-h-svh items-center justify-center overflow-hidden bg-bg-dark px-4 py-12"
+    >
       {/* Fondo de marca */}
       <div className="absolute inset-0" aria-hidden="true">
         <Image
@@ -97,7 +100,7 @@ export default async function LoginPage({
 
           <Link
             href="/"
-            className="mt-6 inline-flex w-full items-center justify-center gap-1.5 text-sm font-medium text-text-main/60 transition-colors hover:text-accent-primary"
+            className="mt-6 inline-flex w-full items-center justify-center gap-1.5 text-sm font-medium text-text-main/60 transition-colors hover:text-accent-primary-hover"
           >
             <ArrowLeft className="size-4" aria-hidden="true" />
             Volver a la web
@@ -109,6 +112,6 @@ export default async function LoginPage({
           administrador.
         </p>
       </div>
-    </div>
+    </main>
   );
 }

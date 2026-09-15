@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+import { A11y, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 
@@ -86,7 +86,7 @@ export default function TestimonialSection() {
           breakpoints={{
             768: { slidesPerView: 2, spaceBetween: 30 },
           }}
-          modules={[Navigation]}
+          modules={[A11y, Navigation]}
           navigation={{ prevEl, nextEl }}
           className="w-full min-w-0 py-4!"
         >
@@ -96,7 +96,7 @@ export default function TestimonialSection() {
                 <article
                   className={`flex h-full min-h-80 flex-col justify-between gap-6 rounded-2xl p-6 transition-all duration-300 sm:p-8 ${
                     isActive
-                      ? "bg-accent-primary text-text-inverse"
+                      ? "bg-accent-primary text-bg-dark"
                       : "scale-[0.96] bg-surface-mid text-text-inverse opacity-60"
                   }`}
                 >
@@ -104,17 +104,21 @@ export default function TestimonialSection() {
                     <div className="flex items-center justify-between">
                       <Quote
                         size={32}
+                        aria-hidden="true"
                         className={
-                          isActive
-                            ? "text-text-inverse/90"
-                            : "text-accent-primary"
+                          isActive ? "text-bg-dark/70" : "text-accent-primary"
                         }
                       />
-                      <div className="flex items-center gap-1">
+                      <div
+                        className="flex items-center gap-1"
+                        role="img"
+                        aria-label={`Valoración: ${t.rating} de 5 estrellas`}
+                      >
                         {Array.from({ length: 5 }, (_, i) => (
                           <Star
                             key={i}
                             size={16}
+                            aria-hidden="true"
                             className={
                               i < t.rating
                                 ? "fill-current"
@@ -129,10 +133,11 @@ export default function TestimonialSection() {
 
                   <footer className="flex items-center gap-4">
                     <span
+                      aria-hidden="true"
                       className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-base font-bold ${
                         isActive
-                          ? "bg-text-inverse text-accent-primary"
-                          : "bg-accent-primary text-text-inverse"
+                          ? "bg-bg-dark text-text-inverse"
+                          : "bg-accent-primary text-bg-dark"
                       }`}
                     >
                       {getInitials(t.name)}
@@ -141,12 +146,10 @@ export default function TestimonialSection() {
                       <span className="text-lg font-medium">{t.name}</span>
                       <span
                         className={`flex items-center gap-1.5 text-sm ${
-                          isActive
-                            ? "text-text-inverse/85"
-                            : "text-text-inverse/60"
+                          isActive ? "text-bg-dark/80" : "text-text-inverse/60"
                         }`}
                       >
-                        <BadgeCheck size={14} />
+                        <BadgeCheck size={14} aria-hidden="true" />
                         Cliente verificado
                       </span>
                     </span>

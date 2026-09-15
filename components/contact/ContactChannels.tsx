@@ -70,7 +70,7 @@ export default function ContactChannels() {
                         ? "noopener noreferrer"
                         : undefined
                     }
-                    className="font-link text-sm uppercase tracking-wide text-accent-primary transition-colors hover:text-text-inverse"
+                    className="font-link text-sm uppercase tracking-wide text-accent-ink transition-colors hover:text-text-inverse"
                   >
                     {actionLabel} →
                   </a>

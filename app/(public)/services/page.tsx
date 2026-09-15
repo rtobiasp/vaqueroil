@@ -56,7 +56,7 @@ export default async function ServicesPage() {
   const serviceList = (await db.select().from(services)) ?? [];
 
   return (
-    <main>
+    <main id="contenido" tabIndex={-1}>
       <JsonLd data={faqJsonLd(faqs)} />
       <JsonLd
         data={breadcrumbJsonLd([

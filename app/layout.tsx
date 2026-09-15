@@ -76,6 +76,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="es" className="h-full antialiased ">
       <body className="min-h-full flex flex-col bg-bg-dark">
         <JsonLd data={businessJsonLd()} />
+        <a
+          href="#contenido"
+          className="sr-only z-[100] rounded-lg bg-text-inverse px-5 py-3 text-sm font-semibold text-bg-dark focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+        >
+          Saltar al contenido principal
+        </a>
         {children}
       </body>
     </html>

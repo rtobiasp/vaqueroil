@@ -62,7 +62,7 @@ export default function ServicesGrid({ services }: { services: ServiceItem[] }) 
     return (
       <div className="rounded-2xl bg-surface-mid p-8 text-center text-text-inverse/70">
         Estamos actualizando nuestro catálogo. Llámanos al{" "}
-        <a href="tel:+34941047695" className="text-accent-primary underline">
+        <a href="tel:+34941047695" className="text-accent-ink underline">
           941 04 76 95
         </a>{" "}
         y te informamos de todos los servicios disponibles.
@@ -108,7 +108,7 @@ export default function ServicesGrid({ services }: { services: ServiceItem[] }) 
               {service.price != null && String(service.price) !== "" ? (
                 <p className="text-sm font-medium tracking-wide text-text-inverse/85">
                   Desde{" "}
-                  <span className="text-lg text-accent-primary">
+                  <span className="text-lg text-accent-ink">
                     {String(service.price)} €
                   </span>
                 </p>
@@ -116,7 +116,8 @@ export default function ServicesGrid({ services }: { services: ServiceItem[] }) 
             </div>
             <Link
               href="/request-appointment-quote"
-              className="flex items-center gap-2 font-link text-sm uppercase tracking-wide text-accent-primary transition-colors hover:text-text-inverse"
+              aria-label={`Reservar ${service.name}`}
+              className="flex items-center gap-2 font-link text-sm uppercase tracking-wide text-accent-ink transition-colors hover:text-text-inverse"
             >
               Reservar este servicio <MoveRight size={18} aria-hidden="true" />
             </Link>

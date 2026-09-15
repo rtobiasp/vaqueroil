@@ -48,7 +48,7 @@ export default function SideBar() {
         <Image
           src={logo}
           loading="eager"
-          alt="Logotipo del sitio"
+          alt="Vaqueroil, taller en Logroño"
           className="w-32 object-contain sm:w-40"
         />
         <button
@@ -56,9 +56,10 @@ export default function SideBar() {
           onClick={() => setMobileOpen(true)}
           aria-label="Abrir menú de administración"
           aria-expanded={mobileOpen}
+          aria-controls="menu-admin-movil"
           className="rounded-md border border-white/10 p-2 text-text-inverse/80 transition-colors hover:bg-surface-mid hover:text-text-inverse"
         >
-          <Menu size={20} />
+          <Menu size={20} aria-hidden="true" />
         </button>
       </div>
 
@@ -73,7 +74,7 @@ export default function SideBar() {
           <Image
             src={logo}
             loading="eager"
-            alt="Logotipo del sitio"
+            alt="Vaqueroil, taller en Logroño"
             className={`transition-all duration-300 object-contain ${collapsed ? "w-0 opacity-0" : "w-40 opacity-100"}`}
           />
           <button
@@ -85,7 +86,7 @@ export default function SideBar() {
               setCollapsed(collapsed ? false : true);
             }}
           >
-            <Menu />
+            <Menu aria-hidden="true" />
           </button>
         </header>
         <nav
@@ -107,23 +108,28 @@ export default function SideBar() {
       </aside>
 
       {/* Overlay móvil */}
-      <div
-        onClick={() => setMobileOpen(false)}
+      <button
+        type="button"
+        tabIndex={-1}
         aria-hidden={!mobileOpen}
-        className={`fixed inset-0 z-40 bg-black/60 backdrop-blur-[2px] transition-opacity duration-300 lg:hidden ${mobileOpen ? "opacity-100" : "pointer-events-none opacity-0"}`}
+        aria-label="Cerrar menú de administración"
+        onClick={() => setMobileOpen(false)}
+        className={`fixed inset-0 z-40 cursor-default bg-black/60 backdrop-blur-[2px] transition-opacity duration-300 lg:hidden ${mobileOpen ? "opacity-100" : "pointer-events-none opacity-0"}`}
       />
 
       {/* Drawer móvil */}
       <aside
+        id="menu-admin-movil"
         aria-label="Menú de administración"
         aria-hidden={!mobileOpen}
+        inert={!mobileOpen}
         className={`fixed inset-y-0 left-0 z-50 flex w-[85vw] max-w-80 flex-col bg-bg-dark bg-felt border-r border-white/10 text-text-inverse transition-transform duration-300 ease-in-out lg:hidden ${mobileOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         <header className="flex w-full flex-row items-center justify-between gap-3 border-b border-white/10 px-5 py-3">
           <Image
             src={logo}
             loading="eager"
-            alt="Logotipo del sitio"
+            alt="Vaqueroil, taller en Logroño"
             className="w-32 object-contain"
           />
           <button
@@ -132,7 +138,7 @@ export default function SideBar() {
             aria-label="Cerrar menú de administración"
             className="rounded-md border border-white/10 p-2 text-text-inverse/80 transition-colors hover:bg-surface-mid hover:text-text-inverse"
           >
-            <X size={20} />
+            <X size={20} aria-hidden="true" />
           </button>
         </header>
         <nav

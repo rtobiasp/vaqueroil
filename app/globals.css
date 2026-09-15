@@ -9,6 +9,9 @@
 
   --color-accent-primary: #E85D22;
   --color-accent-primary-hover: #C44712;
+  /* Naranja aclarado para texto pequeño sobre fondos oscuros (WCAG AA ≥ 4.5:1).
+     No usar sobre fondos claros. */
+  --color-accent-ink: #FF8A3D;
   --color-bg-dark: #141518;
   --color-surface-mid: #2A2D34;
   --color-bg-light: #F8F9FA;
@@ -37,6 +40,14 @@
   .animate-marquee {
     animation: none;
   }
+}
+
+/* Indicador de foco visible por defecto (WCAG 2.4.7 / 2.4.13).
+   :where() tiene especificidad 0: solo actúa donde el componente
+   no define su propio estilo de foco. */
+:where(a, button, [role="button"], input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--color-accent-ink);
+  outline-offset: 2px;
 }
 
 html {

@@ -40,7 +40,7 @@ export default function ServiceProcess() {
                 data-stagger
                 className="flex flex-col gap-3 rounded-2xl bg-surface-mid p-6 text-text-inverse sm:p-7"
               >
-                <span className="font-link text-sm font-bold tracking-widest text-accent-primary">
+                <span className="font-link text-sm font-bold tracking-widest text-accent-ink">
                   {step.number}
                 </span>
                 <h3 className="text-lg leading-snug font-medium sm:text-xl">

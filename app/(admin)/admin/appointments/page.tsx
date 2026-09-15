@@ -65,7 +65,7 @@ export default async function AppointmentsPage({
         <div className="flex flex-col gap-2 sm:flex-row">
           <button
             type="button"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-accent-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent-primary-hover sm:w-auto"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-accent-primary px-4 py-2 text-sm font-medium text-bg-dark transition-colors hover:bg-accent-primary-hover hover:text-text-inverse sm:w-auto"
           >
             <Plus size={16} /> Nueva cita
           </button>

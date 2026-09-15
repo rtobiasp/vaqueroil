@@ -19,7 +19,11 @@ const quickLinks = [
 
 export default function NotFound() {
   return (
-    <main className="relative flex min-h-svh flex-col overflow-hidden bg-bg-dark text-text-inverse">
+    <main
+      id="contenido"
+      tabIndex={-1}
+      className="relative flex min-h-svh flex-col overflow-hidden bg-bg-dark text-text-inverse"
+    >
       {/* Fondo */}
       <div className="absolute inset-0" aria-hidden="true">
         <Image
@@ -50,7 +54,7 @@ export default function NotFound() {
           />
         </Link>
         <span className="hidden items-center gap-2 rounded-full border border-text-inverse/20 bg-bg-dark/60 px-4 py-2 font-link text-xs tracking-widest text-text-inverse/80 uppercase sm:flex">
-          <Wrench size={14} aria-hidden="true" className="text-accent-primary" />
+          <Wrench size={14} aria-hidden="true" className="text-accent-ink" />
           Error 404
         </span>
       </div>
@@ -58,7 +62,7 @@ export default function NotFound() {
       {/* Contenido */}
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col items-center justify-center px-5 py-16 text-center sm:px-8">
         <p className="flex items-center gap-2 rounded-full border border-text-inverse/20 bg-bg-dark/60 px-4 py-2 font-link text-xs tracking-widest text-text-inverse/80 uppercase sm:hidden">
-          <Wrench size={14} aria-hidden="true" className="text-accent-primary" />
+          <Wrench size={14} aria-hidden="true" className="text-accent-ink" />
           Error 404
         </p>
 
@@ -80,7 +84,7 @@ export default function NotFound() {
         <div className="mt-8 flex w-full max-w-md flex-col gap-3 sm:max-w-none sm:flex-row sm:items-center sm:justify-center">
           <Link
             href="/"
-            className="flex items-center justify-center gap-2 rounded-lg bg-accent-primary px-6 py-3.5 text-sm font-semibold uppercase transition-colors duration-200 hover:bg-accent-primary-hover"
+            className="flex items-center justify-center gap-2 rounded-lg bg-accent-primary px-6 py-3.5 text-sm font-semibold text-bg-dark uppercase transition-colors duration-200 hover:bg-accent-primary-hover hover:text-text-inverse"
           >
             <Home size={18} aria-hidden="true" />
             Volver al inicio

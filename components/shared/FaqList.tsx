@@ -25,7 +25,7 @@ export default function FaqList({ items }: { items: FaqItem[] }) {
             <span itemProp="name">{item.question}</span>
             <span
               aria-hidden="true"
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-primary text-xl leading-none transition-transform duration-300 group-open:rotate-45"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-primary text-xl leading-none text-bg-dark transition-transform duration-300 group-open:rotate-45"
             >
               +
             </span>
