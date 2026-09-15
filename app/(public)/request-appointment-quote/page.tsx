@@ -1,7 +1,10 @@
+import type { Metadata } from "next";
 import HeroLanding from "@/components/HeroLanding";
 import SectionHeading from "@/components/shared/SectionHeading";
 import CtaBanner from "@/components/shared/CtaBanner";
 import Reveal from "@/components/animations/Reveal";
+import JsonLd from "@/components/seo/JsonLd";
+import { absoluteUrl, breadcrumbJsonLd } from "@/lib/seo";
 import { db } from "@/src/db/index";
 import { services } from "@/src/db/schema";
 import { AppointmentForm } from "./appointment-form";
@@ -9,10 +12,17 @@ import { MapPin, Phone } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = {
-  title: "Pedir cita | Vaqueroil",
+export const metadata: Metadata = {
+  title: "Pedir cita online | Taller en Logroño",
   description:
-    "Reserva tu cita en el taller en un minuto: elige servicio, fecha y hora. Te la confirmamos por teléfono.",
+    "Reserva tu cita en Vaqueroil en un minuto: elige servicio, fecha y hora entre huecos libres en Logroño. Te la confirmamos por teléfono.",
+  alternates: { canonical: absoluteUrl("/request-appointment-quote") },
+  openGraph: {
+    title: "Pedir cita online | Vaqueroil",
+    description:
+      "Elige servicio, día y hora en un minuto. Taller en Logroño con confirmación por teléfono.",
+    url: absoluteUrl("/request-appointment-quote"),
+  },
 };
 
 export default async function RequestAppointmentQuotePage() {
@@ -22,7 +32,17 @@ export default async function RequestAppointmentQuotePage() {
 
   return (
     <main>
-      <HeroLanding bg_image="/hero_background.jpg" title="PEDIR CITA" />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Inicio", url: absoluteUrl("/") },
+          { name: "Pedir cita", url: absoluteUrl("/request-appointment-quote") },
+        ])}
+      />
+      <HeroLanding
+        bg_image="/hero_background.jpg"
+        title="PEDIR CITA"
+        alt="Pedir cita online en el taller Vaqueroil de Logroño"
+      />
 
       <section className="bg-bg-dark bg-felt px-5 py-12 sm:px-8 sm:py-16 md:px-15 md:py-20">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 sm:gap-10">

@@ -1,15 +1,21 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import Breadcrumbs from "./Breadcrumbs";
 import { gsap, useGSAP, isReducedMotion } from "@/lib/gsap";
 
 type HeroLandingProps = {
   bg_image: string;
   title: string;
+  alt?: string;
 };
 
-export default function HeroLanding({ bg_image, title }: HeroLandingProps) {
+export default function HeroLanding({
+  bg_image,
+  title,
+  alt = "Taller Vaqueroil en Logroño",
+}: HeroLandingProps) {
   const root = useRef<HTMLElement>(null);
 
   useGSAP(
@@ -41,10 +47,14 @@ export default function HeroLanding({ bg_image, title }: HeroLandingProps) {
       ref={root}
       className="relative -mt-20 flex min-h-[60vh] overflow-hidden"
     >
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 h-full w-full bg-cover bg-center bg-no-repeat blur-xs"
-        style={{ backgroundImage: `url(${bg_image})` }}
+      <Image
+        src={bg_image}
+        alt={alt}
+        fill
+        priority
+        fetchPriority="high"
+        sizes="100vw"
+        className="object-cover object-center blur-xs"
       />
       <div
         aria-hidden="true"

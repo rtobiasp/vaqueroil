@@ -1,9 +1,12 @@
+import type { Metadata } from "next";
 import HeroLanding from "@/components/HeroLanding";
 import UbicacionSection from "@/components/home/UbicacionSection";
 import CtaBanner from "@/components/shared/CtaBanner";
 import FaqList from "@/components/shared/FaqList";
 import SectionHeading from "@/components/shared/SectionHeading";
 import ContactChannels from "@/components/contact/ContactChannels";
+import JsonLd from "@/components/seo/JsonLd";
+import { absoluteUrl, breadcrumbJsonLd, faqJsonLd } from "@/lib/seo";
 
 const faqs = [
   {
@@ -28,10 +31,34 @@ const faqs = [
   },
 ];
 
+export const metadata: Metadata = {
+  title: "Contacto | Taller en C. Calahorra 12, Logroño",
+  description:
+    "Contacta con Vaqueroil en Logroño: llama al 941 04 76 95, escribe a info@vaqueroil.es o pide cita online. L-V 9:00–13:30 y 16:00–19:30.",
+  alternates: { canonical: absoluteUrl("/contact") },
+  openGraph: {
+    title: "Contacto | Vaqueroil Logroño",
+    description:
+      "Llámanos, reserva online o visítanos en C. Calahorra 12, Logroño.",
+    url: absoluteUrl("/contact"),
+  },
+};
+
 export default function ContactPage() {
   return (
     <main>
-      <HeroLanding bg_image="/hero_contacto.jpg" title="CONTACTO" />
+      <JsonLd data={faqJsonLd(faqs)} />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Inicio", url: absoluteUrl("/") },
+          { name: "Contacto", url: absoluteUrl("/contact") },
+        ])}
+      />
+      <HeroLanding
+        bg_image="/hero_contacto.jpg"
+        title="CONTACTO"
+        alt="Contacto con el taller Vaqueroil en C. Calahorra 12, Logroño"
+      />
       <ContactChannels />
       <UbicacionSection />
 

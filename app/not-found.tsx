@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Página no encontrada | Vaqueroil",
   description:
     "La página que buscas no existe o se ha movido. Vuelve al inicio o pide cita en Vaqueroil, tu taller de confianza en Logroño.",
+  robots: { index: false, follow: true },
 };
 
 const quickLinks = [

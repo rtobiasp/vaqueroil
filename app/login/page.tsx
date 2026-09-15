@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -5,6 +6,12 @@ import { ArrowLeft, ShieldCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { LoginForm } from "./login-form";
 import { getSafeRedirect } from "@/lib/get-redirect";
+
+export const metadata: Metadata = {
+  title: "Acceso empleados",
+  description: "Acceso privado al panel de administración de Vaqueroil.",
+  robots: { index: false, follow: false },
+};
 
 export default async function LoginPage({
   searchParams,

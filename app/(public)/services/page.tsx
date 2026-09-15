@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import HeroLanding from "@/components/HeroLanding";
 import FeatureBarSection from "@/components/home/FeatureBarSection";
 import CtaBanner from "@/components/shared/CtaBanner";
@@ -5,10 +6,25 @@ import FaqList from "@/components/shared/FaqList";
 import SectionHeading from "@/components/shared/SectionHeading";
 import ServiceProcess from "@/components/services/ServiceProcess";
 import ServicesGrid from "@/components/services/ServicesGrid";
+import JsonLd from "@/components/seo/JsonLd";
+import { absoluteUrl, breadcrumbJsonLd, faqJsonLd } from "@/lib/seo";
 import { db } from "@/src/db";
 import { services } from "@/src/db/schema";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Servicios de taller en Logroño | Revisión, frenos y neumáticos",
+  description:
+    "Servicios de Vaqueroil en Logroño: cambio de aceite y revisión, frenos, neumáticos, diagnosis electrónica, clima y pre-ITV multimarca con presupuesto cerrado.",
+  alternates: { canonical: absoluteUrl("/services") },
+  openGraph: {
+    title: "Servicios de taller en Logroño | Vaqueroil",
+    description:
+      "Revisión, frenos, neumáticos, diagnosis y pre-ITV en Logroño. Presupuesto cerrado antes de empezar.",
+    url: absoluteUrl("/services"),
+  },
+};
 
 const faqs = [
   {
@@ -41,7 +57,18 @@ export default async function ServicesPage() {
 
   return (
     <main>
-      <HeroLanding bg_image="/hero_services.jpg" title="SERVICIOS" />
+      <JsonLd data={faqJsonLd(faqs)} />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Inicio", url: absoluteUrl("/") },
+          { name: "Servicios", url: absoluteUrl("/services") },
+        ])}
+      />
+      <HeroLanding
+        bg_image="/hero_services.jpg"
+        title="SERVICIOS"
+        alt="Servicios de taller multimarca Vaqueroil en Logroño: revisión, frenos y neumáticos"
+      />
 
       <section className="bg-bg-dark bg-felt px-5 py-12 sm:px-8 sm:py-16 md:px-15 md:py-20">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 sm:gap-10">

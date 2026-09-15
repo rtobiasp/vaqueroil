@@ -25,7 +25,7 @@ export default function Footer() {
               <Link href="/" aria-label="Vaqueroil - inicio">
                 <Image
                   src="/logo.png"
-                  alt="Vaqueroil"
+                  alt="Vaqueroil, taller multimarca en Logroño"
                   width={200}
                   height={64}
                   className="h-auto w-36 sm:w-44"

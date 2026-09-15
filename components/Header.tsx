@@ -53,8 +53,8 @@ export default function Header() {
       <Link href="/" className="shrink-0" aria-label="Vaqueroil - inicio">
         <Image
           src={logo_img}
-          alt="Logo principal del sitio web"
-          loading="eager"
+          alt="Vaqueroil, taller multimarca en Logroño"
+          priority
           className={`h-auto max-h-full rounded-xl transition-all duration-300 ${
             scrolled ? "w-40 bg-bg-dark p-2 " : "w-50"
           }`}
@@ -77,12 +77,12 @@ export default function Header() {
             </li>
           ))}
           <li>
-            <a
+            <Link
               href="/request-appointment-quote"
               className="flex h-full items-center justify-between rounded-xl bg-bg-dark px-6 py-1 text-text-inverse transition-colors duration-200 hover:bg-accent-primary"
             >
               RESERVAR
-            </a>
+            </Link>
           </li>
         </ul>
       </nav>
@@ -150,14 +150,14 @@ export default function Header() {
               open ? "translate-y-0 opacity-100" : "-translate-y-1 opacity-0"
             }`}
           >
-            <a
+            <Link
               href="/request-appointment-quote"
               onClick={() => setOpen(false)}
               tabIndex={open ? undefined : -1}
               className="block rounded-xl bg-bg-dark px-4 py-3 text-center text-sm font-medium text-text-inverse transition-colors hover:bg-accent-primary"
             >
               RESERVAR
-            </a>
+            </Link>
           </li>
         </ul>
       </nav>
