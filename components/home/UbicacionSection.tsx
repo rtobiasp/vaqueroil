@@ -1,6 +1,7 @@
 import { Clock, MapPin, Navigation, Phone } from "lucide-react";
 import Reveal from "@/components/animations/Reveal";
 import StaggerGroup from "@/components/animations/StaggerGroup";
+import ConsentMap from "@/components/cookies/ConsentMap";
 
 const horario = [
   { dias: "Lunes — Viernes", horas: "9:00–13:30 · 16:00–19:30" },
@@ -92,14 +93,9 @@ export default function UbicacionSection() {
       {/* Mapa */}
       <Reveal y={0} duration={0.9} className="relative h-[320px] sm:h-[380px] lg:h-auto lg:min-h-full">
         <div className="relative h-[320px] sm:h-[380px] lg:h-auto lg:min-h-full">
-          <iframe
+          <ConsentMap
             title="Mapa de Vaqueroil en C. Calahorra, 12, Logroño"
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d23547.185522801108!2d-2.4296745594073483!3d42.461819182894864!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd5aab2f44b4360f%3A0x9cbb66c643f0db3f!2sVaqueroil!5e0!3m2!1ses!2ses!4v1789213239531!5m2!1ses!2ses"
-            className="absolute inset-0 block h-full w-full"
-            style={{ border: 0 }}
-            loading="lazy"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allowFullScreen
           />
         </div>
       </Reveal>

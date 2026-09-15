@@ -1,7 +1,16 @@
 import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { absoluteUrl, businessJsonLd, siteConfig } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
+
+// Fuente autoalojada: sin peticiones a terceros (Google Fonts).
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-body",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -73,7 +82,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="es" className="h-full antialiased ">
+    <html lang="es" className={`h-full antialiased ${inter.variable}`}>
       <body className="min-h-full flex flex-col bg-bg-dark">
         <JsonLd data={businessJsonLd()} />
         <a

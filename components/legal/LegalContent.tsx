@@ -59,8 +59,9 @@ const sections: LegalSection[] = [
     id: "cookies",
     title: "6. Política de cookies",
     paragraphs: [
-      "Esta web utiliza únicamente cookies técnicas necesarias para su funcionamiento (por ejemplo, recordar preferencias básicas o garantizar la seguridad). No utilizamos cookies de publicidad ni de seguimiento de terceros.",
-      "Puedes bloquear o eliminar las cookies desde la configuración de tu navegador, aunque algunas funciones de la web podrían dejar de estar disponibles.",
+      "Esta web utiliza cookies técnicas necesarias para su funcionamiento, como las de sesión y seguridad del área privada (proveedor: Supabase). Sin ellas, funciones como el inicio de sesión o la reserva de citas no estarían disponibles.",
+      "El mapa de ubicación es un contenido incrustado de Google Maps que puede instalar cookies de terceros, por lo que solo se carga si lo aceptas: al entrar verás un aviso de cookies y, en la propia sección de ubicación, un botón para cargar el mapa. Si lo rechazas, el mapa no se carga y puedes localizarnos con la dirección indicada (C. Calahorra, 12, Logroño). No utilizamos cookies con fines publicitarios.",
+      "Puedes cambiar tu elección en cualquier momento desde el enlace «Cookies» del pie de página, o bloquear y eliminar las cookies desde la configuración de tu navegador, aunque algunas funciones de la web podrían dejar de estar disponibles.",
     ],
   },
   {

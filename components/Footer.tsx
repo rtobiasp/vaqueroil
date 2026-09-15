@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Phone } from "lucide-react";
 import BrandButton from "./ui/BrandButton";
+import CookieSettingsButton from "./cookies/CookieSettingsButton";
 import Reveal from "@/components/animations/Reveal";
 import StaggerGroup from "@/components/animations/StaggerGroup";
 
@@ -86,6 +87,7 @@ export default function Footer() {
             >
               Aviso legal
             </Link>
+            <CookieSettingsButton />
             <Link
               href="/admin/dashboard"
               className="text-text-inverse/35 transition-colors hover:text-text-inverse"
@@ -94,6 +96,11 @@ export default function Footer() {
             </Link>
           </div>
         </div>
+        <p className="mx-auto w-full max-w-7xl px-5 pb-6 text-center text-xs leading-relaxed text-text-inverse/40 sm:px-8 md:px-15">
+          Página de demostración con fines de prueba: no es la web oficial del
+          taller y su contenido (servicios, opiniones y datos mostrados) puede
+          no corresponderse con la realidad.
+        </p>
       </div>
     </footer>
   );
