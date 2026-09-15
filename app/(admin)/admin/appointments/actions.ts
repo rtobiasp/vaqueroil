@@ -1,6 +1,22 @@
 import { db } from "@/src/db";
-import { appointments, services, users, vehicles } from "@/src/db/schema";
-import { and, asc, eq, gt, or } from "drizzle-orm";
+import {
+  appointment_status,
+  appointments,
+  services,
+  users,
+  vehicles,
+} from "@/src/db/schema";
+import {
+  and,
+  asc,
+  eq,
+  gt,
+  gte,
+  lt,
+  or,
+  sql,
+  type SQL,
+} from "drizzle-orm";
 
 const PAGE_SIZE = 10;
 
@@ -31,8 +47,68 @@ function encodeCursor(item: { fechaInicio: Date; id: string }): string {
   ).toString("base64url");
 }
 
-export async function getAppointments(afterParam?: string) {
-  const after = decodeCursor(afterParam);
+const ESTADOS_VALIDOS = appointment_status.enumValues;
+
+type Filtros = {
+  after?: string;
+  q?: string;
+  estado?: string;
+  fecha?: string;
+};
+
+function escapeLike(s: string): string {
+  return s.replace(/[\\%_]/g, (m) => `\\${m}`);
+}
+
+export async function getAppointments(filtros: Filtros = {}) {
+  const after = decodeCursor(filtros.after);
+  const condiciones: SQL[] = [];
+
+  if (after) {
+    condiciones.push(
+      or(
+        gt(appointments.fechaInicio, after.fechaInicio),
+        and(
+          eq(appointments.fechaInicio, after.fechaInicio),
+          gt(appointments.id, after.id),
+        ),
+      )!,
+    );
+  }
+
+  const estado = filtros.estado?.trim();
+  if (estado && (ESTADOS_VALIDOS as string[]).includes(estado)) {
+    condiciones.push(
+      eq(appointments.status, estado as (typeof ESTADOS_VALIDOS)[number]),
+    );
+  }
+
+  const fecha = filtros.fecha?.trim();
+  if (fecha && /^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
+    const inicio = new Date(`${fecha}T00:00:00`);
+    const fin = new Date(inicio);
+    fin.setDate(fin.getDate() + 1);
+    if (!Number.isNaN(inicio.getTime())) {
+      condiciones.push(gte(appointments.fechaInicio, inicio));
+      condiciones.push(lt(appointments.fechaInicio, fin));
+    }
+  }
+
+  const q = filtros.q?.trim();
+  if (q) {
+    // Búsqueda insensible a acentos y mayúsculas: "jose" encuentra "José".
+    // Requiere la extensión unaccent (migración 0006).
+    const patron = `%${escapeLike(q)}%`;
+    const sinAcentos = (columna: unknown, valor: string) =>
+      sql`extensions.unaccent(${columna}) ILIKE extensions.unaccent(${valor}) ESCAPE '\'`;
+    condiciones.push(
+      or(
+        sinAcentos(users.fullName, patron),
+        sinAcentos(vehicles.licensePlate, patron),
+        sinAcentos(services.name, patron),
+      )!,
+    );
+  }
 
   const rows = await db
     .select({
@@ -53,17 +129,7 @@ export async function getAppointments(afterParam?: string) {
     .innerJoin(users, eq(appointments.user, users.id))
     .innerJoin(vehicles, eq(appointments.vehicle, vehicles.id))
     .innerJoin(services, eq(appointments.service, services.id))
-    .where(
-      after
-        ? or(
-            gt(appointments.fechaInicio, after.fechaInicio),
-            and(
-              eq(appointments.fechaInicio, after.fechaInicio),
-              gt(appointments.id, after.id),
-            ),
-          )
-        : undefined,
-    )
+    .where(condiciones.length > 0 ? and(...condiciones) : undefined)
     .orderBy(asc(appointments.fechaInicio), asc(appointments.id))
     .limit(PAGE_SIZE + 1); // +1 para saber si hay siguiente
 

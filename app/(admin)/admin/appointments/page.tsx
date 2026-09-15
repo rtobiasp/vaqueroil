@@ -9,16 +9,15 @@ import {
   Eye,
   Pencil,
   Plus,
-  Search,
   Trash2,
   X,
 } from "lucide-react";
 import Link from "next/link";
 import { getAppointments } from "./actions";
+import { FiltrosCitas } from "./filters";
 
-// TODO(funcionalidad): cablear búsqueda, filtro por estado/fecha,
-// y acciones (confirmar / iniciar / completar / cancelar).
-// Solo visual: sin handlers, sin server actions.
+// TODO(funcionalidad): cablear acciones (confirmar / iniciar / completar /
+// cancelar). Solo visual: sin handlers, sin server actions.
 
 type EstadoCita =
   | "PENDING"
@@ -65,12 +64,41 @@ export default async function AppointmentsPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const params = await searchParams;
-  const afterParam = Array.isArray(params.after)
-    ? params.after[0]
-    : params.after;
+  const primero = (v: string | string[] | undefined) =>
+    Array.isArray(v) ? v[0] : v;
 
-  const { items: citas, nextCursor, hasNext } =
-    await getAppointments(afterParam);
+  const afterParam = primero(params.after);
+  const q = (primero(params.q) ?? "").trim();
+  const estadoParam = (primero(params.estado) ?? "").trim();
+  const fechaParam = (primero(params.fecha) ?? "").trim();
+
+  const estadoActual = ESTADOS.some((e) => e.valor === estadoParam)
+    ? estadoParam
+    : "";
+
+  const { items: citas, nextCursor, hasNext } = await getAppointments({
+    after: afterParam,
+    q,
+    estado: estadoActual === "ALL" ? undefined : estadoActual || undefined,
+    fecha: fechaParam || undefined,
+  });
+
+  const baseQuery = new URLSearchParams();
+  if (q) baseQuery.set("q", q);
+  if (estadoActual && estadoActual !== "ALL")
+    baseQuery.set("estado", estadoActual);
+  if (fechaParam) baseQuery.set("fecha", fechaParam);
+  const qsBase = baseQuery.toString();
+  const hrefPrimera = qsBase
+    ? `/admin/appointments?${qsBase}`
+    : "/admin/appointments";
+  const hrefSiguiente =
+    nextCursor != null
+      ? `/admin/appointments?${new URLSearchParams({
+          ...Object.fromEntries(baseQuery),
+          after: nextCursor,
+        }).toString()}`
+      : null;
 
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-4 text-text-inverse sm:gap-6 sm:px-6 sm:py-6 lg:p-8">
@@ -115,41 +143,7 @@ export default async function AppointmentsPage({
 
       {/* Filtros */}
       <section className="min-w-0 rounded-2xl border border-black/5 bg-white p-4 text-text-main shadow-sm sm:p-5">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-          <label className="relative block flex-1">
-            <Search
-              size={18}
-              className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-text-main/40"
-            />
-            <input
-              type="search"
-              placeholder="Buscar por cliente, matrícula o servicio…"
-              className="w-full rounded-md border border-black/10 bg-bg-light py-2 pr-3 pl-10 text-sm text-text-main placeholder:text-text-main/40 focus:border-accent-primary focus:outline-none"
-            />
-          </label>
-          <label className="flex items-center gap-2 text-sm">
-            <span className="shrink-0 text-text-main/60">Fecha</span>
-            <input
-              type="date"
-              className="w-full rounded-md border border-black/10 bg-bg-light px-3 py-2 text-sm text-text-main focus:border-accent-primary focus:outline-none lg:w-auto"
-            />
-          </label>
-        </div>
-        {/* TODO(funcionalidad): convertir en filtro real por estado */}
-        <div className="mt-3 flex flex-wrap gap-2">
-          {ESTADOS.map((estado, i) => (
-            <span
-              key={estado.valor}
-              className={`cursor-pointer rounded-full border px-3 py-1 text-xs font-medium ${
-                i === 0
-                  ? "border-bg-dark bg-bg-dark text-text-inverse"
-                  : "border-black/10 bg-bg-light text-text-main hover:border-black/20"
-              }`}
-            >
-              {estado.etiqueta}
-            </span>
-          ))}
-        </div>
+        <FiltrosCitas estados={ESTADOS} estadoActual={estadoActual} />
       </section>
 
       {/* Tabla */}
@@ -169,6 +163,16 @@ export default async function AppointmentsPage({
               </tr>
             </thead>
             <tbody className="divide-y divide-black/5">
+              {citas.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={6}
+                    className="px-4 py-8 text-center text-sm text-text-main/60 sm:px-5"
+                  >
+                    Sin resultados para los filtros aplicados.
+                  </td>
+                </tr>
+              ) : null}
               {citas.map((cita) => (
                 <tr key={cita.id} className="align-top hover:bg-bg-light/60">
                   <td className="px-4 py-3 sm:px-5">
@@ -265,7 +269,7 @@ export default async function AppointmentsPage({
           <div className="flex items-center gap-2">
             {afterParam ? (
               <Link
-                href="/admin/appointments"
+                href={hrefPrimera}
                 className="inline-flex items-center gap-1 rounded-md border border-black/10 px-3 py-1.5 font-medium text-text-main transition-colors hover:bg-bg-light"
               >
                 <ChevronLeft size={14} /> Primera
@@ -275,9 +279,9 @@ export default async function AppointmentsPage({
                 <ChevronLeft size={14} /> Primera
               </span>
             )}
-            {hasNext && nextCursor ? (
+            {hasNext && hrefSiguiente ? (
               <Link
-                href={`/admin/appointments?after=${nextCursor}`}
+                href={hrefSiguiente}
                 className="inline-flex items-center gap-1 rounded-md border border-black/10 px-3 py-1.5 font-medium text-text-main transition-colors hover:bg-bg-light"
               >
                 Siguiente <ChevronRight size={14} />
