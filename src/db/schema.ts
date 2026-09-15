@@ -63,7 +63,7 @@ export const appointments = pgTable("appointments", {
     withTimezone: true,
     mode: "date",
   }).notNull(),
-  status: appointment_status("status").default("PENDING"),
+  status: appointment_status("status").default("PENDING").notNull(),
   notes: text("notes"),
   user: uuid("user_id")
     .references(() => users.id)

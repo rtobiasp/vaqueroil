@@ -13,10 +13,11 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+import Link from "next/link";
+import { getAppointments } from "./actions";
 
-// TODO(funcionalidad): sustituir MOCK_CITAS por lectura a BBDD (appointments +
-// join users, vehicles, services) y cablear búsqueda, filtro por estado/fecha,
-// paginación y acciones (confirmar / iniciar / completar / cancelar).
+// TODO(funcionalidad): cablear búsqueda, filtro por estado/fecha,
+// y acciones (confirmar / iniciar / completar / cancelar).
 // Solo visual: sin handlers, sin server actions.
 
 type EstadoCita =
@@ -25,90 +26,6 @@ type EstadoCita =
   | "IN_PROGRESS"
   | "COMPLETED"
   | "CANCELLED";
-
-type CitaMock = {
-  id: string;
-  cliente: string;
-  telefono: string;
-  matricula: string;
-  coche: string;
-  servicio: string;
-  fecha: string;
-  hora: string;
-  estado: EstadoCita;
-  notas?: string;
-};
-
-const MOCK_CITAS: CitaMock[] = [
-  {
-    id: "1",
-    cliente: "Rubén Vaquero",
-    telefono: "612 345 678",
-    matricula: "1234 ABC",
-    coche: "BMW 320d",
-    servicio: "Cambio de aceite",
-    fecha: "15 sept",
-    hora: "09:00",
-    estado: "CONFIRMED",
-  },
-  {
-    id: "2",
-    cliente: "María López",
-    telefono: "600 111 222",
-    matricula: "5678 DEF",
-    coche: "Seat León",
-    servicio: "Revisión completa",
-    fecha: "15 sept",
-    hora: "10:30",
-    estado: "IN_PROGRESS",
-    notas: "Cliente pendiente de llamar a mediodía.",
-  },
-  {
-    id: "3",
-    cliente: "Javier Ruiz",
-    telefono: "655 400 300",
-    matricula: "9012 GHI",
-    coche: "Audi A4",
-    servicio: "Pastillas de freno",
-    fecha: "15 sept",
-    hora: "12:00",
-    estado: "PENDING",
-  },
-  {
-    id: "4",
-    cliente: "Lucía Fernández",
-    telefono: "699 876 543",
-    matricula: "3456 JKL",
-    coche: "VW Golf",
-    servicio: "Distribución",
-    fecha: "16 sept",
-    hora: "09:00",
-    estado: "CONFIRMED",
-  },
-  {
-    id: "5",
-    cliente: "Carlos Méndez",
-    telefono: "611 222 333",
-    matricula: "7890 MNO",
-    coche: "Peugeot 3008",
-    servicio: "Aire acondicionado",
-    fecha: "16 sept",
-    hora: "11:00",
-    estado: "COMPLETED",
-  },
-  {
-    id: "6",
-    cliente: "Ana Torres",
-    telefono: "640 555 666",
-    matricula: "2345 PQR",
-    coche: "Renault Clio",
-    servicio: "Batería",
-    fecha: "17 sept",
-    hora: "09:30",
-    estado: "CANCELLED",
-    notas: "Cliente pidió aplazar a la semana que viene.",
-  },
-];
 
 const ESTADOS: { valor: EstadoCita | "ALL"; etiqueta: string }[] = [
   { valor: "ALL", etiqueta: "Todas" },
@@ -142,7 +59,19 @@ const RESUMEN = [
   { titulo: "Huecos libres", valor: "4", icono: Clock },
 ];
 
-export default function AppointmentsPage() {
+export default async function AppointmentsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const params = await searchParams;
+  const afterParam = Array.isArray(params.after)
+    ? params.after[0]
+    : params.after;
+
+  const { items: citas, nextCursor, hasNext } =
+    await getAppointments(afterParam);
+
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-4 text-text-inverse sm:gap-6 sm:px-6 sm:py-6 lg:p-8">
       {/* Cabecera */}
@@ -240,33 +169,44 @@ export default function AppointmentsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-black/5">
-              {MOCK_CITAS.map((cita) => (
+              {citas.map((cita) => (
                 <tr key={cita.id} className="align-top hover:bg-bg-light/60">
                   <td className="px-4 py-3 sm:px-5">
-                    <p className="font-semibold">{cita.cliente}</p>
-                    <p className="text-xs text-text-main/60">{cita.telefono}</p>
-                    {cita.notas ? (
+                    <p className="font-semibold">{cita.userName}</p>
+                    <p className="text-xs text-text-main/60">
+                      {cita.userPhone ?? cita.userEmail}
+                    </p>
+                    {cita.notes ? (
                       <p className="mt-1 max-w-55 truncate text-xs text-text-main/60 italic">
-                        {cita.notas}
+                        {cita.notes}
                       </p>
                     ) : null}
                   </td>
                   <td className="px-4 py-3">
                     <span className="inline-block rounded-md border border-black/10 bg-bg-light px-2 py-0.5 font-mono text-xs font-bold">
-                      {cita.matricula}
+                      {cita.vehiclePlate}
                     </span>
-                    <p className="mt-1 text-xs text-text-main/60">{cita.coche}</p>
+                    <p className="mt-1 text-xs text-text-main/60">
+                      {cita.vehicleBrand} {cita.vehicleModel}
+                    </p>
                   </td>
-                  <td className="px-4 py-3">{cita.servicio}</td>
+                  <td className="px-4 py-3">{cita.serviceName}</td>
                   <td className="px-4 py-3 whitespace-nowrap">
-                    <p className="font-medium">{cita.fecha}</p>
-                    <p className="text-xs text-text-main/60">{cita.hora}</p>
+                    <p className="font-medium">
+                      {cita.fechaInicio.toLocaleDateString()}
+                    </p>
+                    <p className="text-xs text-text-main/60">
+                      {cita.fechaInicio.toLocaleTimeString("es-ES", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
                   </td>
                   <td className="px-4 py-3">
                     <span
-                      className={`inline-block rounded-full border px-3 py-1 text-xs font-medium whitespace-nowrap ${ESTILO_ESTADO[cita.estado]}`}
+                      className={`inline-block rounded-full border px-3 py-1 text-xs font-medium whitespace-nowrap ${ESTILO_ESTADO[cita.status]}`}
                     >
-                      {ETIQUETA_ESTADO[cita.estado]}
+                      {ETIQUETA_ESTADO[cita.status]}
                     </span>
                   </td>
                   <td className="px-4 py-3 sm:pr-5">
@@ -274,7 +214,7 @@ export default function AppointmentsPage() {
                       <button
                         type="button"
                         title="Ver detalle"
-                        aria-label={`Ver cita de ${cita.cliente}`}
+                        aria-label={`Ver cita de ${cita.userName}`}
                         className="rounded-md border border-black/10 p-1.5 text-text-main/70 transition-colors hover:bg-bg-light hover:text-text-main"
                       >
                         <Eye size={16} />
@@ -282,7 +222,7 @@ export default function AppointmentsPage() {
                       <button
                         type="button"
                         title="Editar"
-                        aria-label={`Editar cita de ${cita.cliente}`}
+                        aria-label={`Editar cita de ${cita.userName}`}
                         className="rounded-md border border-black/10 p-1.5 text-text-main/70 transition-colors hover:bg-bg-light hover:text-text-main"
                       >
                         <Pencil size={16} />
@@ -290,7 +230,7 @@ export default function AppointmentsPage() {
                       <button
                         type="button"
                         title="Confirmar"
-                        aria-label={`Confirmar cita de ${cita.cliente}`}
+                        aria-label={`Confirmar cita de ${cita.userName}`}
                         className="rounded-md border border-emerald-200 bg-emerald-50 p-1.5 text-emerald-700 transition-colors hover:bg-emerald-100"
                       >
                         <Check size={16} />
@@ -298,7 +238,7 @@ export default function AppointmentsPage() {
                       <button
                         type="button"
                         title="Cancelar"
-                        aria-label={`Cancelar cita de ${cita.cliente}`}
+                        aria-label={`Cancelar cita de ${cita.userName}`}
                         className="rounded-md border border-red-200 bg-red-50 p-1.5 text-red-700 transition-colors hover:bg-red-100"
                       >
                         <X size={16} />
@@ -306,7 +246,7 @@ export default function AppointmentsPage() {
                       <button
                         type="button"
                         title="Eliminar"
-                        aria-label={`Eliminar cita de ${cita.cliente}`}
+                        aria-label={`Eliminar cita de ${cita.userName}`}
                         className="hidden rounded-md border border-black/10 p-1.5 text-text-main/70 transition-colors hover:bg-bg-light hover:text-text-main sm:block"
                       >
                         <Trash2 size={16} />
@@ -319,27 +259,34 @@ export default function AppointmentsPage() {
           </table>
         </div>
 
-        {/* Paginación visual */}
+        {/* Paginación por cursor */}
         <footer className="flex flex-col gap-3 border-t border-black/5 px-4 py-3 text-xs text-text-main/60 sm:flex-row sm:items-center sm:justify-between sm:px-5">
-          <p>Mostrando 6 de 24 citas</p>
+          <p>Mostrando {citas.length} citas</p>
           <div className="flex items-center gap-2">
-            <button
-              type="button"
-              className="inline-flex items-center gap-1 rounded-md border border-black/10 px-3 py-1.5 font-medium text-text-main transition-colors hover:bg-bg-light"
-            >
-              <ChevronLeft size={14} /> Anterior
-            </button>
-            <span className="rounded-md bg-bg-dark px-3 py-1.5 font-bold text-text-inverse">
-              1
-            </span>
-            <span className="px-2">2</span>
-            <span className="px-2">3</span>
-            <button
-              type="button"
-              className="inline-flex items-center gap-1 rounded-md border border-black/10 px-3 py-1.5 font-medium text-text-main transition-colors hover:bg-bg-light"
-            >
-              Siguiente <ChevronRight size={14} />
-            </button>
+            {afterParam ? (
+              <Link
+                href="/admin/appointments"
+                className="inline-flex items-center gap-1 rounded-md border border-black/10 px-3 py-1.5 font-medium text-text-main transition-colors hover:bg-bg-light"
+              >
+                <ChevronLeft size={14} /> Primera
+              </Link>
+            ) : (
+              <span className="inline-flex cursor-not-allowed items-center gap-1 rounded-md border border-black/10 px-3 py-1.5 font-medium opacity-50">
+                <ChevronLeft size={14} /> Primera
+              </span>
+            )}
+            {hasNext && nextCursor ? (
+              <Link
+                href={`/admin/appointments?after=${nextCursor}`}
+                className="inline-flex items-center gap-1 rounded-md border border-black/10 px-3 py-1.5 font-medium text-text-main transition-colors hover:bg-bg-light"
+              >
+                Siguiente <ChevronRight size={14} />
+              </Link>
+            ) : (
+              <span className="inline-flex cursor-not-allowed items-center gap-1 rounded-md border border-black/10 px-3 py-1.5 font-medium opacity-50">
+                Siguiente <ChevronRight size={14} />
+              </span>
+            )}
           </div>
         </footer>
       </section>
