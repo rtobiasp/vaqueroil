@@ -9,14 +9,22 @@ import {
 import {
   and,
   asc,
+  count,
   eq,
   gt,
   gte,
   lt,
+  ne,
   or,
   sql,
   type SQL,
 } from "drizzle-orm";
+import {
+  generateSlots,
+  madridDateKey,
+  madridDayRangeUtc,
+  parseDateKey,
+} from "@/lib/schedule";
 
 const PAGE_SIZE = 10;
 
@@ -84,20 +92,16 @@ export async function getAppointments(filtros: Filtros = {}) {
   }
 
   const fecha = filtros.fecha?.trim();
-  if (fecha && /^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
-    const inicio = new Date(`${fecha}T00:00:00`);
-    const fin = new Date(inicio);
-    fin.setDate(fin.getDate() + 1);
-    if (!Number.isNaN(inicio.getTime())) {
-      condiciones.push(gte(appointments.fechaInicio, inicio));
-      condiciones.push(lt(appointments.fechaInicio, fin));
+  if (fecha && parseDateKey(fecha)) {
+    const rango = madridDayRangeUtc(fecha);
+    if (rango) {
+      condiciones.push(gte(appointments.fechaInicio, rango.start));
+      condiciones.push(lt(appointments.fechaInicio, rango.end));
     }
   }
 
   const q = filtros.q?.trim();
   if (q) {
-    // Búsqueda insensible a acentos y mayúsculas: "jose" encuentra "José".
-    // Requiere la extensión unaccent (migración 0006).
     const patron = `%${escapeLike(q)}%`;
     const sinAcentos = (columna: unknown, valor: string) =>
       sql`extensions.unaccent(${columna}) ILIKE extensions.unaccent(${valor}) ESCAPE '\'`;
@@ -131,7 +135,7 @@ export async function getAppointments(filtros: Filtros = {}) {
     .innerJoin(services, eq(appointments.service, services.id))
     .where(condiciones.length > 0 ? and(...condiciones) : undefined)
     .orderBy(asc(appointments.fechaInicio), asc(appointments.id))
-    .limit(PAGE_SIZE + 1); // +1 para saber si hay siguiente
+    .limit(PAGE_SIZE + 1);
 
   const hasNext = rows.length > PAGE_SIZE;
   const items = hasNext ? rows.slice(0, -1) : rows;
@@ -142,3 +146,65 @@ export async function getAppointments(filtros: Filtros = {}) {
 }
 
 export type CitaFila = Awaited<ReturnType<typeof getAppointments>>["items"][number];
+
+export type ResumenCitas = {
+  hoy: number;
+  pendientes: number;
+  enTaller: number;
+  huecosLibres: number;
+};
+
+export async function getAppointmentSummary(
+  ref: Date = new Date(),
+): Promise<ResumenCitas> {
+  const claveHoy = madridDateKey(ref);
+  const rangoHoy = madridDayRangeUtc(claveHoy);
+
+  const [[pendientes], [enTaller], [hoy]] = await Promise.all([
+    db
+      .select({ valor: count() })
+      .from(appointments)
+      .where(eq(appointments.status, "PENDING")),
+    db
+      .select({ valor: count() })
+      .from(appointments)
+      .where(eq(appointments.status, "IN_PROGRESS")),
+    rangoHoy
+      ? db
+          .select({ valor: count() })
+          .from(appointments)
+          .where(
+            and(
+              gte(appointments.fechaInicio, rangoHoy.start),
+              lt(appointments.fechaInicio, rangoHoy.end),
+              ne(appointments.status, "CANCELLED"),
+            ),
+          )
+      : Promise.resolve([{ valor: 0 }]),
+  ]);
+
+  let huecosLibres = 0;
+  if (rangoHoy) {
+    const ocupadas = await db
+      .select({
+        fechaInicio: appointments.fechaInicio,
+        fechaFin: appointments.fechaFin,
+      })
+      .from(appointments)
+      .where(
+        and(
+          gte(appointments.fechaInicio, rangoHoy.start),
+          lt(appointments.fechaInicio, rangoHoy.end),
+          ne(appointments.status, "CANCELLED"),
+        ),
+      );
+    huecosLibres = generateSlots(claveHoy, ref, ocupadas).length;
+  }
+
+  return {
+    hoy: hoy?.valor ?? 0,
+    pendientes: pendientes?.valor ?? 0,
+    enTaller: enTaller?.valor ?? 0,
+    huecosLibres,
+  };
+}

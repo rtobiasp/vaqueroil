@@ -3,7 +3,7 @@
 import { APPOINTMENTS_CACHE_TAG } from "@/app/(admin)/admin/dashboard/actions";
 import { db } from "@/src/db";
 import { appointments } from "@/src/db/schema";
-import { and, eq, gt, lt, ne } from "drizzle-orm";
+import { and, eq, gt, inArray, lt, ne } from "drizzle-orm";
 import { updateTag } from "next/cache";
 
 export type MutationResult = {
@@ -15,7 +15,6 @@ export type MutationResult = {
 type Estado = typeof appointments.$inferSelect.status;
 type AccionEstado = "confirmar" | "iniciar" | "completar" | "cancelar";
 
-// Desde qué estado se permite cada acción.
 const TRANSICIONES: Record<AccionEstado, { desde: Estado[]; a: Estado }> = {
   confirmar: { desde: ["PENDING"], a: "CONFIRMED" },
   iniciar: { desde: ["CONFIRMED"], a: "IN_PROGRESS" },
@@ -29,42 +28,42 @@ function esUuid(v: unknown): v is string {
   return typeof v === "string" && UUID_RE.test(v);
 }
 
-/** Cambia el estado de una cita validando la transición. */
+function esAccion(v: string): v is AccionEstado {
+  return v in TRANSICIONES;
+}
+
 export async function cambiarEstadoCita(
   id: string,
   accion: AccionEstado,
 ): Promise<MutationResult> {
-  if (!esUuid(id) || !(accion in TRANSICIONES)) {
+  if (!esUuid(id) || !esAccion(accion)) {
     return { success: false, message: "Petición no válida." };
   }
   const { desde, a } = TRANSICIONES[accion];
 
-  const [cita] = await db
-    .select({ id: appointments.id, status: appointments.status })
-    .from(appointments)
-    .where(eq(appointments.id, id))
-    .limit(1);
-
-  if (!cita) {
-    return { success: false, message: "La cita ya no existe." };
-  }
-  if (!desde.includes(cita.status)) {
-    return {
-      success: false,
-      message: `No se puede ${accion} una cita en estado ${cita.status}.`,
-    };
-  }
-
-  await db
+  const actualizadas = await db
     .update(appointments)
     .set({ status: a })
-    .where(eq(appointments.id, id));
+    .where(and(eq(appointments.id, id), inArray(appointments.status, desde)))
+    .returning({ id: appointments.id });
+
+  if (actualizadas.length === 0) {
+    const [cita] = await db
+      .select({ id: appointments.id })
+      .from(appointments)
+      .where(eq(appointments.id, id))
+      .limit(1);
+    if (!cita) return { success: false, message: "La cita ya no existe." };
+    return {
+      success: false,
+      message: "La cita cambió de estado. Recarga la lista.",
+    };
+  }
 
   updateTag(APPOINTMENTS_CACHE_TAG);
   return { success: true };
 }
 
-/** Elimina una cita definitivamente. */
 export async function eliminarCita(id: string): Promise<MutationResult> {
   if (!esUuid(id)) {
     return { success: false, message: "Petición no válida." };
@@ -90,7 +89,6 @@ const ESTADOS_EDITABLES: Estado[] = [
   "CANCELLED",
 ];
 
-/** Edita fechas, estado y notas de una cita. */
 export async function editarCita(
   _prev: MutationResult,
   formData: FormData,
@@ -138,7 +136,6 @@ export async function editarCita(
     return { success: false, message: "La cita ya no existe." };
   }
 
-  // Conflicto de hueco con otras citas no canceladas (la propia se excluye).
   if (estado !== "CANCELLED") {
     const solapes = await db
       .select({ id: appointments.id })

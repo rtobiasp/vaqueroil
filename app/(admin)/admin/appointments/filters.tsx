@@ -2,7 +2,7 @@
 
 import { Search } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function buildHref(
   pathname: string,
@@ -14,7 +14,7 @@ function buildHref(
     if (v === undefined || v === "") next.delete(k);
     else next.set(k, v);
   }
-  next.delete("after"); // cualquier cambio de filtro resetea el cursor
+  next.delete("after");
   const qs = next.toString();
   return qs ? `${pathname}?${qs}` : pathname;
 }
@@ -31,11 +31,15 @@ export function FiltrosCitas({
   const searchParams = useSearchParams();
 
   const fechaInicial = searchParams.get("fecha") ?? "";
-  // Controlado local: el re-render del servidor no lo desmonta ni le quita el foco
   const [q, setQ] = useState(() => searchParams.get("q") ?? "");
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Debounce 400ms: una sola petición por ráfaga de teclas
+  useEffect(() => {
+    return () => {
+      if (timer.current) clearTimeout(timer.current);
+    };
+  }, []);
+
   const onBuscar = (valor: string) => {
     setQ(valor);
     if (timer.current) clearTimeout(timer.current);
