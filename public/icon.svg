@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#141518"/>
+  <!-- Silueta del techo del coche del logotipo: contorno negro + trazo blanco -->
+  <path d="M 70 218 C 150 192, 210 182, 256 158 C 302 134, 330 118, 442 196" fill="none" stroke="#000000" stroke-width="46" stroke-linecap="round"/>
+  <path d="M 70 218 C 150 192, 210 182, 256 158 C 302 134, 330 118, 442 196" fill="none" stroke="#FFFFFF" stroke-width="30" stroke-linecap="round"/>
+  <!-- V de VAQUERO: naranja corporativo #E85D22 con contorno negro como el logo -->
+  <path d="M 110 252 L 256 428 L 402 252 L 326 252 L 256 352 L 186 252 Z" fill="#E85D22" stroke="#000000" stroke-width="12" stroke-linejoin="round"/>
+</svg>
