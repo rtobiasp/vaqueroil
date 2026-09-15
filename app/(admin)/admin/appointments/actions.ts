@@ -140,3 +140,5 @@ export async function getAppointments(filtros: Filtros = {}) {
 
   return { items, nextCursor, hasNext };
 }
+
+export type CitaFila = Awaited<ReturnType<typeof getAppointments>>["items"][number];

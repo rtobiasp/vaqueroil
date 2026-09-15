@@ -2,19 +2,15 @@ import {
   Bell,
   CalendarDays,
   Car,
-  Check,
   ChevronLeft,
   ChevronRight,
   Clock,
-  Eye,
-  Pencil,
   Plus,
-  Trash2,
-  X,
 } from "lucide-react";
 import Link from "next/link";
 import { getAppointments } from "./actions";
 import { FiltrosCitas } from "./filters";
+import { AccionesCita } from "./row-actions";
 
 // TODO(funcionalidad): cablear acciones (confirmar / iniciar / completar /
 // cancelar). Solo visual: sin handlers, sin server actions.
@@ -214,48 +210,7 @@ export default async function AppointmentsPage({
                     </span>
                   </td>
                   <td className="px-4 py-3 sm:pr-5">
-                    <div className="flex justify-end gap-1.5">
-                      <button
-                        type="button"
-                        title="Ver detalle"
-                        aria-label={`Ver cita de ${cita.userName}`}
-                        className="rounded-md border border-black/10 p-1.5 text-text-main/70 transition-colors hover:bg-bg-light hover:text-text-main"
-                      >
-                        <Eye size={16} />
-                      </button>
-                      <button
-                        type="button"
-                        title="Editar"
-                        aria-label={`Editar cita de ${cita.userName}`}
-                        className="rounded-md border border-black/10 p-1.5 text-text-main/70 transition-colors hover:bg-bg-light hover:text-text-main"
-                      >
-                        <Pencil size={16} />
-                      </button>
-                      <button
-                        type="button"
-                        title="Confirmar"
-                        aria-label={`Confirmar cita de ${cita.userName}`}
-                        className="rounded-md border border-emerald-200 bg-emerald-50 p-1.5 text-emerald-700 transition-colors hover:bg-emerald-100"
-                      >
-                        <Check size={16} />
-                      </button>
-                      <button
-                        type="button"
-                        title="Cancelar"
-                        aria-label={`Cancelar cita de ${cita.userName}`}
-                        className="rounded-md border border-red-200 bg-red-50 p-1.5 text-red-700 transition-colors hover:bg-red-100"
-                      >
-                        <X size={16} />
-                      </button>
-                      <button
-                        type="button"
-                        title="Eliminar"
-                        aria-label={`Eliminar cita de ${cita.userName}`}
-                        className="hidden rounded-md border border-black/10 p-1.5 text-text-main/70 transition-colors hover:bg-bg-light hover:text-text-main sm:block"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
+                    <AccionesCita cita={cita} />
                   </td>
                 </tr>
               ))}
