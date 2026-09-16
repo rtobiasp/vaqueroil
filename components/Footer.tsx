@@ -96,10 +96,21 @@ export default function Footer() {
             </Link>
           </div>
         </div>
-        <p className="mx-auto w-full max-w-7xl px-5 pb-6 text-center text-xs leading-relaxed text-text-inverse/40 sm:px-8 md:px-15">
+        <p className="mx-auto w-full max-w-7xl px-5 pb-2 text-center text-xs leading-relaxed text-text-inverse/40 sm:px-8 md:px-15">
           Página de demostración con fines de prueba: no es la web oficial del
           taller y su contenido (servicios, opiniones y datos mostrados) puede
           no corresponderse con la realidad.
+        </p>
+        <p className="mx-auto w-full max-w-7xl px-5 pb-6 text-center text-xs leading-relaxed text-text-inverse/40 sm:px-8 md:px-15">
+          Hecho por{" "}
+          <Link
+            href="https://ruben-tobias-dev.vercel.app/"
+            target="_blank"
+            rel="noreferrer"
+            className="underline decoration-dotted underline-offset-4 transition-colors hover:text-text-inverse"
+          >
+            Rubén Tobías
+          </Link>
         </p>
       </div>
     </footer>
